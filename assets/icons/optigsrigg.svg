@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#171d2c"/>
+      <stop offset="100%" stop-color="#0c1018"/>
+    </linearGradient>
+    <radialGradient id="splatGlow" cx="50%" cy="64%" r="36%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#388bfd" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#2ea043" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rimStroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#22d3ee" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#2ea043" stop-opacity="0.45"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" ry="14" fill="url(#bgGrad)" stroke="url(#rimStroke)" stroke-width="1.5"/>
+  <!-- Konvergerande ljuskoner från de 3 kamerorna -->
+  <polygon points="15,24 32,45 27,47" fill="#388bfd" fill-opacity="0.26"/>
+  <polygon points="32,16 34.5,44 29.5,44" fill="#22d3ee" fill-opacity="0.30"/>
+  <polygon points="49,24 37,47 32,45" fill="#2ea043" fill-opacity="0.26"/>
+  <line x1="15" y1="24" x2="32" y2="45" stroke="#388bfd" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.85"/>
+  <line x1="32" y1="16" x2="32" y2="45" stroke="#22d3ee" stroke-width="1.7" stroke-linecap="round" stroke-opacity="0.9"/>
+  <line x1="49" y1="24" x2="32" y2="45" stroke="#2ea043" stroke-width="1.6" stroke-linecap="round" stroke-opacity="0.85"/>
+  <!-- Rigg-båge i titan -->
+  <path d="M 14 25 Q 32 13 50 25" fill="none" stroke="#64748b" stroke-width="3.2" stroke-linecap="round"/>
+  <!-- 3 DJI Action 4 fisheye-enheter -->
+  <circle cx="15" cy="24" r="4.6" fill="#1e293b" stroke="#60a5fa" stroke-width="1.4"/>
+  <circle cx="15" cy="24" r="1.9" fill="#388bfd"/>
+  <circle cx="32" cy="16" r="5.0" fill="#1e293b" stroke="#22d3ee" stroke-width="1.5"/>
+  <circle cx="32" cy="16" r="2.1" fill="#22d3ee"/>
+  <circle cx="49" cy="24" r="4.6" fill="#1e293b" stroke="#2ea043" stroke-width="1.4"/>
+  <circle cx="49" cy="24" r="1.9" fill="#2ea043"/>
+  <!-- 3D Gaussian Splatting glödande ellipsoid-kärna -->
+  <circle cx="32" cy="45" r="12" fill="url(#splatGlow)"/>
+  <ellipse cx="32" cy="45" rx="8.5" ry="5.5" transform="rotate(-14 32 45)" fill="none" stroke="#22d3ee" stroke-width="1.2" stroke-opacity="0.85"/>
+  <ellipse cx="32" cy="45" rx="8.5" ry="5.5" transform="rotate(24 32 45)" fill="none" stroke="#388bfd" stroke-width="1.1" stroke-opacity="0.75"/>
+  <circle cx="32" cy="45" r="3.4" fill="#e0f2fe"/>
+  <circle cx="25" cy="44" r="1.4" fill="#388bfd"/>
+  <circle cx="39" cy="46" r="1.4" fill="#2ea043"/>
+  <circle cx="32" cy="39.5" r="1.2" fill="#22d3ee"/>
+</svg>

@@ -1,0 +1,3618 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OptiGSRigg Control Center</title>
+  <link id="appFaviconData" rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,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" />
+  <link rel="shortcut icon" type="image/png" href="data:image/png;base64,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" />
+  <link rel="manifest" href="/manifest.webmanifest?v=3" />
+  <style>
+    :root {
+      --bg-app: #141517;
+      --bg-panel: #1b1c1f;
+      --bg-header: #222428;
+      --bg-input: #111214;
+      --bg-viewport: #0c0d0f;
+      --bg-btn: #2a2d32;
+      --bg-btn-hover: #34383f;
+      --bg-btn-primary: #2563eb;
+      --bg-btn-primary-hover: #1d4ed8;
+      --border: #2c2e33;
+      --border-light: #383b42;
+      --text-main: #dcdfe4;
+      --text-dim: #9da3ae;
+      --text-muted: #686e78;
+      --status-ok: #2ea043;
+      --status-warn: #d29922;
+      --status-err: #f85149;
+      --status-active: #388bfd;
+      --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "Cascadia Mono", "Consolas", "SF Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg-app);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      line-height: 1.35;
+      overflow: hidden;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .workstation {
+      display: grid;
+      grid-template-rows: 38px 1fr 26px;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Top Toolbar & Mode Tabs */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border);
+      padding: 0 10px;
+      gap: 12px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      height: 100%;
+    }
+
+    .app-title {
+      font-weight: 600;
+      font-size: 12.5px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-tabs {
+      display: flex;
+      height: 100%;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .nav-tab {
+      background: #191a1d;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      color: var(--text-dim);
+      padding: 6px 14px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+      background: #202226;
+    }
+
+    .nav-tab.active {
+      background: var(--bg-panel);
+      color: #ffffff;
+      border-top: 2px solid var(--status-active);
+      padding-top: 5px;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Tab Views */
+    .tab-view {
+      display: none;
+      min-height: 0;
+      height: 100%;
+      width: 100%;
+    }
+    .tab-view.active {
+      display: grid;
+    }
+
+    /* STEP 1 VIEW LAYOUT: Left (450px) | Right (1fr) */
+    #viewStep1 {
+      grid-template-columns: 460px 1fr;
+      background: var(--border);
+      gap: 1px;
+    }
+
+    /* STEP 0 CHARUCO CALIBRATION VIEW LAYOUT */
+    #viewCalib {
+      grid-template-columns: 430px 1fr;
+      background: var(--border);
+      gap: 1px;
+    }
+
+    /* STEP 2-10 VIEW LAYOUT */
+    #viewPipeline {
+      grid-template-columns: 415px 1fr;
+      background: var(--border);
+      gap: 1px;
+    }
+
+    .left-dock {
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 0;
+    }
+
+    .right-workspace {
+      background: var(--border);
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 1px;
+      min-height: 0;
+    }
+
+    .right-workspace-pipeline {
+      background: var(--border);
+      display: grid;
+      grid-template-rows: 1fr 245px;
+      gap: 1px;
+      min-height: 0;
+    }
+
+    /* Panels & Section Headers */
+    .panel-section {
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-header {
+      background: var(--bg-header);
+      padding: 5px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .section-body {
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Data Tables */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 4px 5px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .data-table th {
+      background: #17181b;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table.selectable tbody tr {
+      cursor: pointer;
+    }
+
+    .data-table.selectable tbody tr:hover {
+      background: #1c2026;
+    }
+
+    .data-table.selectable tbody tr.selected {
+      background: rgba(56, 139, 253, 0.22);
+      color: #ffffff;
+    }
+
+    /* Property Rows */
+    .prop-row {
+      display: grid;
+      grid-template-columns: 125px 1fr;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prop-label {
+      color: var(--text-dim);
+      font-size: 11.5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 4px 7px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--status-active);
+    }
+
+    /* Buttons */
+    .btn {
+      background: var(--bg-btn);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 2px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--bg-btn-hover);
+    }
+
+    .btn.active-toggle {
+      background: var(--status-active);
+      border-color: #60a5fa;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .btn-primary {
+      background: var(--bg-btn-primary);
+      border-color: #3b82f6;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--bg-btn-primary-hover);
+    }
+
+    .btn-success {
+      background: #238636;
+      border-color: #2ea043;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .btn-success:hover:not(:disabled) {
+      background: #2ea043;
+    }
+
+    .btn-danger {
+      background: #7f1d1d;
+      border-color: #b91c1c;
+      color: #fecaca;
+    }
+
+    .btn-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+    }
+
+    /* Step 1 Preview Monitor */
+    .preview-panel {
+      background: var(--bg-viewport);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .preview-toolbar {
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      padding: 4px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .preview-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 0;
+      background: #090a0c;
+    }
+
+    .preview-single-wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      cursor: zoom-in;
+      user-select: none;
+    }
+
+    .preview-single-wrap img,
+    .preview-single-wrap video {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+    }
+
+    .preview-triple-wrap {
+      width: 100%;
+      height: 100%;
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .triple-cell {
+      background: #090a0c;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 0;
+      cursor: zoom-in;
+      user-select: none;
+    }
+
+    .triple-cell img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      -webkit-user-drag: none;
+    }
+
+    .hud-overlay {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: rgba(13, 14, 16, 0.85);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-main);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    /* EXIF & Technical Metadata Inspector Panel */
+    .exif-panel {
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .exif-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .warn-banner {
+      background: rgba(210, 153, 34, 0.14);
+      border: 1px solid var(--status-warn);
+      color: #f0b72f;
+      padding: 5px 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .ok-banner {
+      background: rgba(46, 160, 67, 0.12);
+      border: 1px solid var(--status-ok);
+      color: #3fb950;
+      padding: 5px 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+    }
+
+    .cell-mismatch {
+      color: #f0b72f;
+      font-weight: 600;
+      background: rgba(210, 153, 34, 0.1);
+    }
+
+    /* Scrubber Bar */
+    .scrubber-bar {
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .scrubber-bar input[type="range"] {
+      flex: 1;
+      accent-color: var(--status-active);
+      height: 4px;
+      cursor: pointer;
+    }
+
+    /* Pipeline View Elements */
+    .viewport-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      min-height: 0;
+    }
+
+    .cam-view {
+      background: var(--bg-viewport);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 0;
+      cursor: zoom-in;
+      user-select: none;
+    }
+
+    .cam-view img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: none;
+      -webkit-user-drag: none;
+    }
+
+    .bottom-Split {
+      display: grid;
+      grid-template-columns: 585px 1fr;
+      gap: 1px;
+      background: var(--border);
+      min-height: 0;
+    }
+
+    .console-output {
+      flex: 1;
+      background: #0b0c0e;
+      padding: 7px 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.45;
+      color: #c5c9d1;
+      overflow-y: auto;
+      user-select: text;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .log-ok { color: #3fb950; }
+    .log-warn { color: #d29922; }
+    .log-err { color: #f85149; }
+    .log-hdr { color: #58a6ff; font-weight: 600; }
+
+    /* Bottom Status Bar */
+    .statusbar {
+      background: var(--bg-header);
+      border-top: 1px solid var(--border);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .status-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 1px;
+      background: var(--status-ok);
+      flex-shrink: 0;
+    }
+
+    .status-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-progress-bar {
+      width: 140px;
+      height: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .status-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--status-active);
+      transition: width 0.2s;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-input);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #32353c;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #434750;
+    }
+
+    /* Engine & Path Settings Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-panel {
+      width: 680px;
+      max-width: 94vw;
+      max-height: 90vh;
+      background: #1b1c1f;
+      border: 1px solid #2c2e33;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
+    }
+    .modal-header {
+      padding: 10px 14px;
+      background: #141517;
+      border-bottom: 1px solid #2c2e33;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e4e7ec;
+    }
+    .modal-body {
+      padding: 12px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .modal-footer {
+      padding: 10px 14px;
+      background: #141517;
+      border-top: 1px solid #2c2e33;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .setting-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: #141517;
+      border: 1px solid #2c2e33;
+      border-radius: 3px;
+      padding: 8px 10px;
+    }
+    .setting-row-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .setting-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #d0d5dd;
+    }
+    .setting-hint {
+      font-size: 10px;
+      color: #8b919d;
+    }
+    .setting-input-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .setting-input-row input,
+    .setting-input-row select {
+      flex: 1;
+      background: #1b1c1f;
+      border: 1px solid #2c2e33;
+      color: #e4e7ec;
+      padding: 5px 8px;
+      border-radius: 3px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      min-width: 0;
+    }
+    .setting-input-row input:focus,
+    .setting-input-row select:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+    .badge-ok {
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: rgba(34, 197, 94, 0.14);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+      white-space: nowrap;
+    }
+    .badge-err {
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: rgba(239, 68, 68, 0.14);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      white-space: nowrap;
+    }
+    .badge-neutral {
+      font-size: 10px;
+      font-family: ui-monospace, monospace;
+      padding: 1px 6px;
+      border-radius: 2px;
+      background: rgba(148, 163, 184, 0.12);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      white-space: nowrap;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 5px;
+      background: #f87171;
+      vertical-align: middle;
+    }
+    .status-dot.ok {
+      background: #4ade80;
+    }
+  </style>
+</head>
+<body>
+  <div class="workstation">
+    <!-- TOP APPLICATION TOOLBAR WITH WORKFLOW TABS -->
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <div class="app-title">
+          <img src="data:image/png;base64,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" alt="" style="width:20px; height:20px; border-radius:4px; flex-shrink:0;" />
+          <span>OptiGSRigg</span>
+          <span style="color: var(--text-muted);">/</span>
+          <span id="activeProjectBadge" style="color: var(--status-active); font-family: var(--font-mono);">Inget projekt valt</span>
+        </div>
+
+        <nav class="nav-tabs">
+          <div class="nav-tab" id="tabBtnCalib" onclick="switchTab('calib')" style="border-bottom:2px solid rgba(56,139,253,0.45);">
+            <span>KALIBRERING: ChArUco Rigg &amp; Kontroll</span>
+            <span id="calibNavPill" style="margin-left:6px; font-size:10px; padding:1px 6px; border-radius:999px; background:rgba(255,255,255,0.08); color:var(--text-muted);">Ej kalibrerad</span>
+          </div>
+          <div class="nav-tab active" id="tabBtnStep1" onclick="switchTab('step1')">
+            <span>STEG 1: Kameror, Tagningar &amp; EXIF-Inspektion</span>
+          </div>
+          <div class="nav-tab" id="tabBtnPipeline" onclick="switchTab('pipeline')">
+            <span>STEG 2–10: Synk, Rigg-SfM &amp; 3DGUT Pipeline</span>
+          </div>
+        </nav>
+      </div>
+
+      <div class="toolbar-right">
+        <button class="btn" onclick="refreshAll()">Skanna kameror &amp; disk</button>
+        <button class="btn" onclick="openFolder('proj')">Öppna projektmapp</button>
+        <button class="btn" onclick="openSpirulaGui()">Spirula GUI</button>
+        <button class="btn" onclick="openLichtfeldGui()">LichtFeld GUI</button>
+        <button class="btn" onclick="openSettingsModal()" title="Sökvägar för Spirula Studio, LichtFeld Studio, COLMAP &amp; inspelningsmapp">
+          <span class="status-dot" id="enginePathsDot"></span>Inställningar
+        </button>
+      </div>
+    </header>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 1: STEG 1 - KAMEROR, TAGNINGAR, FÖRHANDSVISNING & EXIF/FFPROBE -->
+    <!-- =================================================================== -->
+    <div class="tab-view active" id="viewStep1">
+      <!-- LEFT DOCK: CAMERAS, TAKES LIST & PROJECT NAMING -->
+      <aside class="left-dock">
+        <!-- 1A. Camera & SD Card Status -->
+        <section class="panel-section">
+          <div class="section-header">
+            <span>1A. Kameror &amp; Minneskort (.id-kontroll)</span>
+            <span id="sdSummaryTxt" style="font-family: var(--font-mono); font-size: 10px;">0/3 anslutna</span>
+          </div>
+          <div class="section-body">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Kamera</th>
+                  <th>ID-fil</th>
+                  <th>Enhet</th>
+                  <th>Utrymme</th>
+                  <th>Klipp / Status</th>
+                </tr>
+              </thead>
+              <tbody id="sdTableBody"></tbody>
+            </table>
+
+            <!-- Shown only if an unmarked SD card with DCIM is found -->
+            <div id="unmarkedCardBox" style="display: none; background: rgba(210,153,34,0.12); border: 1px solid var(--status-warn); padding: 6px 8px;">
+              <div style="font-size: 11px; color: #f0b72f; margin-bottom: 4px;" id="unmarkedCardTxt">
+                Hittade minneskort med DCIM utan .id-fil:
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <select id="unmarkedDriveSelect" style="width: 90px;"></select>
+                <button class="btn" onclick="assignCardId('CAM0_LEFT.id')">Sätt Vänster</button>
+                <button class="btn" onclick="assignCardId('CAM1_MID.id')">Sätt Mitten</button>
+                <button class="btn" onclick="assignCardId('CAM2_RIGHT.id')">Sätt Höger</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 1B. All Takes / Recordings List -->
+        <section class="panel-section" style="flex: 1; min-height: 180px;">
+          <div class="section-header">
+            <span>1B. Tagningar / Filmningar (Klicka för att granska)</span>
+            <span id="takesCountTxt" style="font-family: var(--font-mono); font-size: 10px;">0 tagningar</span>
+          </div>
+          <div class="section-body" style="flex: 1; min-height: 0; overflow-y: auto; padding: 0;">
+            <table class="data-table selectable" style="border: none;">
+              <thead>
+                <tr>
+                  <th>Källa</th>
+                  <th>Tagning / Filnamn</th>
+                  <th>Inspelad</th>
+                  <th>Kam</th>
+                  <th>Storlek</th>
+                </tr>
+              </thead>
+              <tbody id="takesTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 1C. Name Project & Start / Import -->
+        <section class="panel-section" style="border-bottom: none;">
+          <div class="section-header">
+            <span>1C. Döp Tagning &amp; Starta Projekt</span>
+            <span id="selectedTakeSourceBadge" style="font-family: var(--font-mono); font-size: 10px;">Ingen vald</span>
+          </div>
+          <div class="section-body">
+            <div class="prop-row">
+              <span class="prop-label">Projektnamn:</span>
+              <input type="text" id="customProjectName" placeholder="t.ex. Staty_Utomhus_Take01" oninput="updateTargetPreview()" />
+            </div>
+
+            <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); background: var(--bg-input); border: 1px solid var(--border); padding: 5px 7px;">
+              Målmapp: <span id="targetFolderPreview" style="color: var(--text-main);">D:\3DGS_Captures\...</span>
+            </div>
+
+            <!-- Action buttons when an SD card take is selected -->
+            <div id="sdProjectActions" style="display: none; flex-direction: column; gap: 5px;">
+              <button class="btn btn-success" id="btnStartSdCopy" style="padding: 7px 10px; justify-content: center;" onclick="createProjectFromSelection('sd')">
+                Kopiera vald tagning från SD-kort &amp; Skapa projekt
+              </button>
+            </div>
+
+            <!-- Action buttons when a Disk take/session is selected -->
+            <div id="diskProjectActions" style="display: flex; flex-direction: column; gap: 5px;">
+              <div class="btn-row-2">
+                <button class="btn btn-primary" style="padding: 6px 8px;" onclick="createProjectFromSelection('rename')">
+                  Döp om &amp; Välj som aktivt projekt
+                </button>
+                <button class="btn" style="padding: 6px 8px;" onclick="createProjectFromSelection('copy')">
+                  Kopiera råfiler till nytt projekt
+                </button>
+              </div>
+              <button class="btn btn-success" style="padding: 6px 10px;" onclick="activateAndGoToStep2()">
+                Använd detta projekt &amp; Gå vidare till Steg 2–10 &rarr;
+              </button>
+            </div>
+
+            <!-- Live File Copy Telemetry Panel (Shown during & after copying) -->
+            <div id="copyProgressPanel" style="display: none; background: var(--bg-input); border: 1px solid var(--border-light); padding: 8px 9px; flex-direction: column; gap: 7px; margin-top: 2px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px;">
+                <span id="copyHeaderTitle" style="font-weight: 600; color: var(--status-active);">KOPIERAR FILER...</span>
+                <span id="copySpeedEtaTxt" style="color: var(--text-dim);">0.0 MB/s • Kvar: -- s</span>
+              </div>
+
+              <!-- Overall Progress Bar -->
+              <div>
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; margin-bottom: 3px;">
+                  <span id="copyTotalMbTxt" style="color: var(--text-main);">Totalt: 0.0 MB av 0.0 MB</span>
+                  <span id="copyTotalPctTxt" style="font-weight: 600; color: var(--text-main);">0%</span>
+                </div>
+                <div style="width: 100%; height: 7px; background: #1a1c20; border: 1px solid var(--border); overflow: hidden;">
+                  <div id="copyTotalBarFill" style="height: 100%; width: 0%; background: var(--status-active); transition: width 0.12s;"></div>
+                </div>
+              </div>
+
+              <!-- Per-file (Fil 1/3, Fil 2/3, Fil 3/3) Progress Bars -->
+              <div id="copyFilesList" style="display: flex; flex-direction: column; gap: 5px; border-top: 1px solid var(--border); padding-top: 6px;"></div>
+
+              <div style="display: flex; gap: 5px;">
+                <button class="btn btn-danger" id="btnCancelCopy" style="width: 100%; display: none;" onclick="stopProcess()">
+                  Avbryt kopiering
+                </button>
+                <button class="btn btn-success" id="btnCopyDoneGoStep2" style="width: 100%; display: none; padding: 6px 10px;" onclick="switchTab('pipeline')">
+                  Kopiering klar! Gå vidare till Steg 2–10 &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <!-- RIGHT WORKSPACE: TOP VIDEO/FRAME PREVIEW (CENTER CAM) + BOTTOM EXIF/FFPROBE TABLE -->
+      <main class="right-workspace">
+        <!-- TOP: FAST PREVIEW MONITOR (DEFAULT: CENTER CAMERA) -->
+        <section class="preview-panel">
+          <div class="preview-toolbar">
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11px; color: var(--text-dim); margin-right: 4px; font-weight: 600;">KAMERAVY:</span>
+              <button class="btn active-toggle" id="btnPreviewCam2" onclick="setPreviewCam('cam2_center')">Cam 2 Mitten (Ref)</button>
+              <button class="btn" id="btnPreviewCam1" onclick="setPreviewCam('cam1_left')">Cam 1 Vänster</button>
+              <button class="btn" id="btnPreviewCam3" onclick="setPreviewCam('cam3_right')">Cam 3 Höger</button>
+              <button class="btn" id="btnPreviewAll3" onclick="setPreviewCam('all3')">Alla 3 Sida-vid-Sida</button>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11px; color: var(--text-dim); margin-right: 4px;">LÄGE:</span>
+              <button class="btn active-toggle" id="btnModeFrame" onclick="setPreviewMode('frame')">Snabb Bildruta (FFmpeg)</button>
+              <button class="btn" id="btnModeVideo" onclick="setPreviewMode('video')">Videospelare (Med ljud)</button>
+            </div>
+          </div>
+
+          <div class="preview-stage">
+            <!-- Single Camera View (Default: Cam 2 Center) -->
+            <div class="preview-single-wrap" id="singlePreviewWrap">
+              <div class="hud-overlay" id="singlePreviewHud">CAM 2 MITTEN • Välj en tagning till vänster</div>
+              <img id="singlePreviewImg" alt="Förhandsvisning" style="display: none;" />
+              <video id="singlePreviewVideo" controls style="display: none;"></video>
+              <div id="singlePreviewEmpty" style="font-family: var(--font-mono); color: var(--text-muted);">
+                Klicka på en tagning i listan till vänster för att förhandsgranska klippet
+              </div>
+            </div>
+
+            <!-- Triple Camera View (All 3 Cameras at selected timestamp) -->
+            <div class="preview-triple-wrap" id="triplePreviewWrap">
+              <div class="triple-cell">
+                <div class="hud-overlay" id="tripleHud1">CAM 1 VÄNSTER</div>
+                <img id="tripleImg1" alt="Cam 1" />
+              </div>
+              <div class="triple-cell">
+                <div class="hud-overlay" id="tripleHud2">CAM 2 MITTEN</div>
+                <img id="tripleImg2" alt="Cam 2" />
+              </div>
+              <div class="triple-cell">
+                <div class="hud-overlay" id="tripleHud3">CAM 3 HÖGER</div>
+                <img id="tripleImg3" alt="Cam 3" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Timestamp Scrubber Bar for Raw MP4 Inspection -->
+          <div class="scrubber-bar" id="rawTimeScrubberBar">
+            <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);">Tidpunkt i klipp:</span>
+            <button class="btn" style="padding: 2px 7px; font-size: 10.5px;" onclick="seekPreviewTime('cover')">Cover (Direkt)</button>
+            <button class="btn" style="padding: 2px 7px; font-size: 10.5px;" onclick="seekPreviewTime(1.5)">1.5s (Klapp)</button>
+            <button class="btn" style="padding: 2px 7px; font-size: 10.5px;" onclick="seekPreviewTime(5.0)">5s</button>
+            <button class="btn" style="padding: 2px 7px; font-size: 10.5px;" onclick="seekPreviewTime(15.0)">15s</button>
+            <button class="btn" style="padding: 2px 7px; font-size: 10.5px;" onclick="seekPreviewTime(30.0)">30s</button>
+            <input type="range" id="rawVideoTimeSlider" min="0" max="50" step="0.5" value="0" onchange="seekPreviewTime(this.value)" />
+            <span id="rawVideoTimeReadout" style="font-family: var(--font-mono); font-size: 11px; min-width: 90px; text-align: right;">Cover (0.0s)</span>
+          </div>
+        </section>
+
+        <!-- BOTTOM: FULL EXIF / FFPROBE METADATA & CAMERA COMPARISON MATRIX -->
+        <section class="exif-panel">
+          <div class="section-header">
+            <span>Teknisk Video- &amp; EXIF-Metadata (FFprobe Direktanalys av Alla 3 Kameror)</span>
+            <span id="exifTakeLabel" style="font-family: var(--font-mono); font-size: 10px; text-transform: none;">-</span>
+          </div>
+
+          <div class="exif-scroll">
+            <div id="exifWarningsBox"></div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 210px;">Teknisk Parameter / EXIF</th>
+                  <th>Cam 1 Vänster (cam1_left)</th>
+                  <th>Cam 2 Mitten (cam2_center)</th>
+                  <th>Cam 3 Höger (cam3_right)</th>
+                </tr>
+              </thead>
+              <tbody id="exifMatrixBody">
+                <tr>
+                  <td colspan="4" style="color: var(--text-muted);">Välj en tagning i listan till vänster för att läsa ut EXIF- och videometadata.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW 2: STEG 2–10 - PIPELINE, SYNKADE BILD-TRIOR & 3DGUT-TRÄNING    -->
+    <!-- =================================================================== -->
+    <div class="tab-view" id="viewPipeline">
+      <aside class="left-dock">
+        <section class="panel-section">
+          <div class="section-header">
+            <span>2A. Aktivt Projekt &amp; Källfiler</span>
+          </div>
+          <div class="section-body">
+            <div class="prop-row">
+              <span class="prop-label">Råvideo (raw)</span>
+              <div class="input-group">
+                <input type="text" id="rawDirInput" onchange="validatePaths()" />
+                <button class="btn" onclick="browseDir('rawDirInput')">...</button>
+              </div>
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-label">Projekt (processed)</span>
+              <div class="input-group">
+                <input type="text" id="projDirInput" onchange="validatePaths()" />
+                <button class="btn" onclick="browseDir('projDirInput')">...</button>
+              </div>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fil / Kontroll</th>
+                  <th>Storlek / Status</th>
+                </tr>
+              </thead>
+              <tbody id="fileCheckBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 2B. Dedicated Audio Clap-Sync Section -->
+        <section class="panel-section">
+          <div class="section-header">
+            <span>2B. Ljudsynk &amp; Klapp-Analys (FFT)</span>
+            <span id="syncStatusBadge" style="font-family: var(--font-mono); font-size: 10px; text-transform: none; color: var(--text-muted);">Ej analyserad</span>
+          </div>
+          <div class="section-body">
+            <canvas id="audioSyncCanvas" width="356" height="54" style="width: 100%; height: 54px; background: #0c0d0f; border: 1px solid var(--border); display: block;"></canvas>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Kamera</th>
+                  <th>Förskjutning (ms)</th>
+                  <th>Offset (@ FPS)</th>
+                  <th>Startruta</th>
+                </tr>
+              </thead>
+              <tbody id="syncTableBody">
+                <tr>
+                  <td colspan="4" style="color: var(--text-muted);">Klicka på Analysera Ljudsynk för att hitta klappen.</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="btn-row-2">
+              <button class="btn" onclick="runFastAudioSync()">Analysera Ljudsynk (0.2s)</button>
+              <button class="btn" onclick="previewAtClapTime()">Granska vid Klapp</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-section" style="border-bottom: none; flex: 1;">
+          <div class="section-header">
+            <span>2C. Bildextraktion, Rigg-SfM &amp; 3DGUT</span>
+          </div>
+          <div class="section-body">
+            <div class="prop-row">
+              <span class="prop-label">Skärpefönster (s)</span>
+              <input type="number" id="windowInput" value="0.40" step="0.05" />
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-label">Bildfrekvens (FPS)</span>
+              <input type="number" id="fpsInput" value="50.0" step="1.0" />
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-label">Baslinje C1–C3 (mm)</span>
+              <input type="number" id="baselineInput" value="300.0" step="1.0" />
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-label">Kalibreringsläge</span>
+              <select id="rigModeSelect" onchange="onRigModeChanged()">
+                <option value="calibrated">calibrated (ChArUco Låst Lins &amp; Rigg — Rekommenderad)</option>
+                <option value="auto_calibrate" selected>auto_calibrate (Mät ur klipp i Steg 3)</option>
+                <option value="mode_a">mode_a (CAD Standard ±45°)</option>
+                <option value="mode_b">mode_b (CAD 180° Flip)</option>
+              </select>
+            </div>
+
+            <div class="prop-row" style="align-items:center;">
+              <span class="prop-label">Färgkorrigering (LUT)</span>
+              <div style="display:flex; align-items:center; gap:6px; min-width:0; flex:1; justify-content:flex-end;">
+                <label style="display:flex; align-items:center; gap:5px; cursor:pointer; font-size:11px; color:#e2e8f0; white-space:nowrap;">
+                  <input type="checkbox" id="applyLutCheckbox" onchange="onLutToggleChanged()" style="accent-color:#3b82f6; cursor:pointer;" />
+                  <span>D-Log M &rarr; Rec.709</span>
+                </label>
+                <span id="lutExifBadge" class="badge-neutral">EXIF: -</span>
+              </div>
+            </div>
+
+            <div class="prop-row" id="lutPathRow">
+              <span class="prop-label">3D-LUT (.cube)</span>
+              <div style="display:flex; gap:4px; align-items:center; min-width:0; flex:1;">
+                <input type="text" id="lutPathInput" placeholder="assets/luts/DJI_Action4_DLogM_to_Rec709.cube" title="Sökväg till .cube LUT-fil" style="flex:1; min-width:0; font-family:ui-monospace, monospace; font-size:10px; background:#0f1012; border:1px solid #2c2e33; color:#d4d4d8; padding:3px 6px; border-radius:3px;" />
+                <button type="button" onclick="browseLutFile()" title="Välj annan .cube LUT-fil" style="background:#23252a; border:1px solid #35373e; color:#e2e8f0; border-radius:3px; padding:3px 8px; font-size:11px; cursor:pointer; flex-shrink:0;">...</button>
+              </div>
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-label">Extraherings-Backend</span>
+              <select id="extractBackendSelect">
+                <option value="auto">auto (Spirula Vulkan GPU -> OpenCV)</option>
+                <option value="spirula_gpu">spirula_gpu (Vulkan Video Decode)</option>
+                <option value="opencv_parallel">opencv_parallel (Multi-Thread CPU)</option>
+              </select>
+            </div>
+
+            <div class="prop-row">
+              <span class="prop-label">SfM-Backend</span>
+              <select id="sfmBackendSelect">
+                <option value="auto">auto (Spirula -> COLMAP)</option>
+                <option value="spirula">spirula (Vulkan GPU)</option>
+                <option value="colmap">colmap (Rig Bundle Adjuster)</option>
+              </select>
+            </div>
+
+            <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 5px;">
+              <button class="btn btn-primary" style="padding: 7px 10px; justify-content: flex-start;" id="btnRunSync" onclick="runSyncOnly()">
+                Steg 2: Ljudsynk, GPU-Bildextraktion &amp; Kalibrera vinklar
+              </button>
+
+              <button class="btn" style="padding: 7px 10px; justify-content: flex-start; border-color: var(--status-active);" id="btnRunFull" onclick="runStep1SfM()">
+                Steg 3: Kör 3D Rigg-SfM (Bygg 3D-punktmoln på bild-trior)
+              </button>
+
+              <button class="btn btn-success" style="padding: 7px 10px; justify-content: flex-start;" id="btnRunMcp" onclick="startLichtfeldTraining()">
+                Steg 4: Ladda i LichtFeld Studio &amp; Starta 3DGUT
+              </button>
+
+              <button class="btn btn-danger" style="padding: 7px 10px; display: none;" id="btnStopProc" onclick="stopProcess()">
+                Avbryt pågående process
+              </button>
+            </div>
+
+            <!-- Live Image Extraction & SfM Telemetry Panel -->
+            <div id="extractProgressPanel" style="display: none; background: var(--bg-input); border: 1px solid var(--border-light); padding: 7px 9px; flex-direction: column; gap: 5px; margin-top: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 10.5px;">
+                <span id="extractHeaderTitle" style="font-weight: 600; color: var(--status-active);">EXTRAHERAR BILD-TRIOR...</span>
+                <span id="extractEtaTxt" style="color: var(--text-dim);">Kvar: -- s</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px;">
+                <span id="extractCountsTxt" style="color: var(--text-main);">0 av 0 bild-trior (0 bilder)</span>
+                <span id="extractSharpnessTxt" style="color: var(--text-dim);">Skärpa: -</span>
+              </div>
+              <div style="width: 100%; height: 6px; background: #15171a; border: 1px solid var(--border); overflow: hidden;">
+                <div id="extractBarFill" style="height: 100%; width: 0%; background: var(--status-active); transition: width 0.12s;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="right-workspace-pipeline">
+        <!-- Extracted Triplets OR Synced Raw Video Viewport -->
+        <section class="preview-panel">
+          <div class="section-header">
+            <span id="viewportHeaderTitle">Synkroniserad 3-Kameravy (processed/images)</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-family: var(--font-mono); font-size: 10px; color: var(--status-active); text-transform: none;">[Håll inne musknapp på bild = 100% 1:1 Pixel-Zoom]</span>
+              <span id="viewportInfoTxt" style="font-family: var(--font-mono); font-size: 10px; text-transform: none;">0 bild-trior</span>
+            </div>
+          </div>
+
+          <div class="viewport-grid">
+            <div class="cam-view">
+              <div class="hud-overlay" id="hudStep2Cam1">CAM 1 LEFT</div>
+              <img id="imgCam1" alt="cam1_left" />
+              <div id="emptyCam1" style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">Ingen bild i cam1_left</div>
+            </div>
+            <div class="cam-view">
+              <div class="hud-overlay" id="hudStep2Cam2">CAM 2 CENTER (REF)</div>
+              <img id="imgCam2" alt="cam2_center" />
+              <div id="emptyCam2" style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">Ingen bild i cam2_center</div>
+            </div>
+            <div class="cam-view">
+              <div class="hud-overlay" id="hudStep2Cam3">CAM 3 RIGHT</div>
+              <img id="imgCam3" alt="cam3_right" />
+              <div id="emptyCam3" style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">Ingen bild i cam3_right</div>
+            </div>
+          </div>
+
+          <div class="scrubber-bar">
+            <button class="btn" style="padding: 2px 8px;" onclick="stepFrame(-1)">&lt;</button>
+            <input type="range" id="frameSlider" min="0" max="0" value="0" onchange="onScrubFrame(this.value)" disabled />
+            <button class="btn" style="padding: 2px 8px;" onclick="stepFrame(1)">&gt;</button>
+            <div id="frameReadout" style="font-family: var(--font-mono); font-size: 11px; min-width: 210px; text-align: right;">0 / 0</div>
+          </div>
+        </section>
+
+        <!-- Bottom Telemetry & Console -->
+        <section class="bottom-Split">
+          <div style="background: var(--bg-panel); display: flex; flex-direction: column; min-height: 0;">
+            <div class="section-header">
+              <span>Rigg-Kalibrering (Kameravinklar) &amp; LichtFeld MCP</span>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span id="calibStatusBadge" style="font-family: var(--font-mono); font-size: 10px; text-transform: none; color: var(--text-muted);">Ej kalibrerad ännu</span>
+                <button class="btn" style="padding: 1px 6px; font-size: 10px; border-color: var(--status-active);" onclick="switchTab('calib')">Öppna ChArUco-Kalibrering</button>
+                <button class="btn" style="padding: 1px 6px; font-size: 10px;" onclick="runCalibrateOnly()">Mät vinklar nu (4s)</button>
+              </div>
+            </div>
+            <div class="section-body" style="overflow-y: auto; padding: 6px 8px; gap: 5px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Kamera</th>
+                    <th>Pos X</th>
+                    <th>Yaw (±45°)</th>
+                    <th>Lutning (-12°/+8°)</th>
+                    <th>ΔPitch (+20°)</th>
+                    <th>Roll / Stab.</th>
+                  </tr>
+                </thead>
+                <tbody id="calibTableBody">
+                  <tr>
+                    <td colspan="6" style="color: var(--text-muted); white-space: normal; line-height: 1.4;">
+                      Ej kalibrerad ännu — Kameravinklarna mäts automatiskt ur bild-triorna direkt efter Steg 2.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 10px; font-family: var(--font-mono); color: var(--text-dim);">
+                <span>LICHTFELD 3DGUT TELEMETRI</span>
+                <span id="mcpBadgeTxt" style="color: var(--text-muted);">MCP Frånkopplad</span>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>State</th>
+                    <th>Iteration</th>
+                    <th>Loss</th>
+                    <th>3DGUT Splats</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td id="mcpStateCell">-</td>
+                    <td id="mcpIterCell">0 / 30,000</td>
+                    <td id="mcpLossCell">-</td>
+                    <td id="mcpSplatsCell">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-panel); display: flex; flex-direction: column; min-height: 0;">
+            <div class="section-header">
+              <span>Processlogg (stdout / stderr)</span>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn" style="padding: 1px 6px; font-size: 10px;" onclick="copyLogs()">Kopiera</button>
+                <button class="btn" style="padding: 1px 6px; font-size: 10px;" onclick="clearLogs()">Rensa</button>
+              </div>
+            </div>
+            <div class="console-output" id="terminalLog"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 0: CHARUCO RIG CALIBRATION & PRE-FLIGHT SCENE VERIFICATION   -->
+    <!-- ================================================================ -->
+    <div id="viewCalib" class="tab-view">
+      <aside class="left-dock">
+        <section class="panel-section">
+          <div class="section-header">
+            <span>0A. Skriv ut 3 ChArUco-tavlor (A4 100%)</span>
+            <span id="calBoardsBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Ej skapade</span>
+          </div>
+          <div class="section-body">
+            <div style="font-size:11px; color:var(--text-dim); line-height:1.45;">
+              Skriv ut i <strong>100% / Verklig storlek</strong> på A4 liggande, tejpa plant i ett ~90°-rumshörn och mät 100mm-kontrollinjalen. Ställ kamerorna i <code>Wide</code>, <strong>RockSteady AV</strong> och samma upplösning som vid skanning (t.ex. <code>4K 4:3</code>).
+            </div>
+            <button class="btn btn-primary" style="padding:7px 10px; justify-content:flex-start;" onclick="generateBoardsAction(true)">
+              1. Generera tavlor &amp; Öppna A4-utskrift
+            </button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <button class="btn" onclick="openCalibDocAction('boards_dir')">Öppna tavelmapp</button>
+              <button class="btn" onclick="openCalibDocAction('guide')">Öppna Svensk Manual</button>
+            </div>
+            <div id="calBoardsStatusTxt" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">
+              Mål: calibration/boards/printable_calibration_kit.html
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-header">
+            <span>0B. Kalibrera Rigg (Engångsjobb per riggbygge)</span>
+            <span id="calProfileTypeBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Saknas</span>
+          </div>
+          <div class="section-body">
+            <div class="prop-row">
+              <span class="prop-label">Välj tagning på disk</span>
+              <select id="calTakeSelect" onchange="onCalTakeSelected(this.value)">
+                <option value="">-- Välj importerad tagning --</option>
+              </select>
+            </div>
+            <div class="prop-row">
+              <span class="prop-label">Kalibreringsmapp (raw)</span>
+              <div style="display:flex; gap:4px; flex:1; min-width:0;">
+                <input type="text" id="calRawDirInput" placeholder="Mapp med cam1_left/cam2_center/cam3_right.mp4" />
+                <button class="btn" onclick="browseCalRawDir()">Bläddra...</button>
+              </div>
+            </div>
+            <div class="prop-row">
+              <span class="prop-label">Uppmätt 100mm-linjal (mm)</span>
+              <input type="number" id="calRulerInput" value="100.0" step="0.1" min="50" max="200" />
+            </div>
+            <div class="prop-row">
+              <span class="prop-label">Videons FPS (klapp-synk)</span>
+              <input type="number" id="calFpsInput" value="50.0" step="1.0" min="24" max="240" />
+            </div>
+            <div id="calProfileSourceTxt" style="font-size:11px; color:var(--text-dim); line-height:1.4; background:var(--bg-input); border:1px solid var(--border); padding:6px 8px;">
+              Ingen kalibreringsprofil laddad ännu.
+            </div>
+            <button class="btn btn-success" id="btnCalRunSolve" style="padding:7px 10px; justify-content:flex-start;" onclick="runCharucoCalibAction(false)">
+              2. Kalibrera Rigg från ChArUco-videor
+            </button>
+            <button class="btn" id="btnCalRunDemo" style="padding:6px 10px; justify-content:flex-start;" onclick="runCharucoCalibAction(true)">
+              Testa motor med Syntetisk Demo (Skriver EJ över skarp profil)
+            </button>
+            <button class="btn btn-danger" id="btnCalStopProc" style="padding:7px 10px; display:none;" onclick="stopProcess()">
+              Avbryt pågående kalibrering
+            </button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-header">
+            <span>0C. 100% Förkontroll innan Fältfilmning (Utan tavlor)</span>
+            <span id="calVerifyBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Ej testad</span>
+          </div>
+          <div class="section-body">
+            <div style="font-size:11px; color:var(--text-dim); line-height:1.45;">
+              Testar din sparade kalibrering mot aktiv session (Steg 1/2) med epipolär 3D-SIFT-geometri och upplösningskontroll. Avslöjar direkt om ett kamerafäste rubbats &ge; 1&deg;!
+            </div>
+            <button class="btn btn-primary" id="btnCalRunVerify" style="padding:7px 10px; justify-content:flex-start;" onclick="runSceneVerifyAction()">
+              3. Kontrollera Rigg på Aktiv Scen (Epipolär 3D-Check)
+            </button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <button class="btn" onclick="openCalibDocAction('report')">Öppna HTML-Rapport</button>
+              <button class="btn" onclick="openCalibDocAction('preview_dir')">Öppna kontrollbilder</button>
+            </div>
+            <div id="calVerifyBox" style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim); background:var(--bg-input); border:1px solid var(--border); padding:6px 8px; line-height:1.45;">
+              Ingen scenkontroll körd ännu.
+            </div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="right-workspace-pipeline" style="grid-template-rows: 1.05fr 0.72fr 0.28fr;">
+        <section class="preview-panel">
+          <div class="section-header">
+            <span>Visuell Guide, ChArUco &amp; Epipolär Kontroll [Håll inne mus = 100% 1:1 Lupp]</span>
+            <div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap;">
+              <button class="btn active-toggle" id="btnCalModeGuide" style="padding:2px 7px; font-size:10.5px;" onclick="setCalibPreviewMode('guide')">Guide: Hörn &amp; Filmning</button>
+              <button class="btn" id="btnCalModeReproj" style="padding:2px 7px; font-size:10.5px;" onclick="setCalibPreviewMode('reproj')">Återprojektion (Grön/Röd)</button>
+              <button class="btn" id="btnCalModeCoverage" style="padding:2px 7px; font-size:10.5px;" onclick="setCalibPreviewMode('coverage')">Linstäckning (Kanter)</button>
+              <button class="btn" id="btnCalModeEpipolar" style="padding:2px 7px; font-size:10.5px;" onclick="setCalibPreviewMode('epipolar')">Scenkontroll (Epipolär)</button>
+              <button class="btn" id="btnCalModeBoards" style="padding:2px 7px; font-size:10.5px;" onclick="setCalibPreviewMode('boards')">ChArUco-tavlor</button>
+            </div>
+          </div>
+
+          <div id="calGuidePanel" style="flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; background:#0d0f12; min-height:0;">
+            <div style="background:rgba(248,81,73,0.12); border:1px solid #f85149; color:#fca5a5; padding:7px 10px; border-radius:3px; font-size:11.5px; line-height:1.45;">
+              <strong>VIKTIGT OM HÖRNET:</strong> Böj eller vik <strong>ALDRIG</strong> Tavla 1 inuti själva 90°-hörnvecket! Varje utskriven A4-tavla måste sitta <strong>100 % plant</strong> (på styv kartong/skiva eller rakt på vägg).
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:stretch;">
+              <div style="background:var(--bg-panel); border:1px solid var(--border); padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="font-size:12px; font-weight:600; color:#60a5fa;">1. Så monterar du i ett 90°-hörn (Välj Metod A eller B)</div>
+                <svg viewBox="0 0 460 175" style="width:100%; height:auto; background:#090b0e; border:1px solid var(--border); border-radius:2px;">
+                  <!-- Metod A -->
+                  <text x="12" y="18" font-family="Segoe UI, sans-serif" font-size="11" font-weight="700" fill="#e2e8f0">Metod A: Direkt på 2 väggar</text>
+                  <polyline points="26,116 115,34 204,116" fill="none" stroke="#64748b" stroke-width="4"/>
+                  <text x="115" y="27" font-family="Segoe UI, sans-serif" font-size="8.5" fill="#94a3b8" text-anchor="middle">Hörnveck tomt!</text>
+                  <line x1="36" y1="107" x2="72" y2="74" stroke="#3b82f6" stroke-width="6"/>
+                  <text x="34" y="76" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#60a5fa">Tavla 0</text>
+                  <line x1="124" y1="42" x2="158" y2="73" stroke="#22c55e" stroke-width="6"/>
+                  <text x="148" y="45" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#4ade80">Tavla 1 (bredvid vecket, +20cm upp)</text>
+                  <line x1="168" y1="83" x2="202" y2="114" stroke="#f59e0b" stroke-width="6"/>
+                  <text x="175" y="128" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#fbbf24">Tavla 2</text>
+                  <circle cx="115" cy="144" r="6" fill="#e2e8f0"/>
+                  <line x1="115" y1="144" x2="54" y2="92" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="3,3"/>
+                  <line x1="115" y1="144" x2="140" y2="60" stroke="#22c55e" stroke-width="1.3" stroke-dasharray="3,3"/>
+                  <line x1="115" y1="144" x2="184" y2="98" stroke="#f59e0b" stroke-width="1.3" stroke-dasharray="3,3"/>
+                  <text x="115" y="164" font-family="Segoe UI, sans-serif" font-size="9" fill="#cbd5e1" text-anchor="middle">Rigg ~1.1 m</text>
+
+                  <!-- Metod B -->
+                  <line x1="230" y1="10" x2="230" y2="165" stroke="#272b33" stroke-width="1"/>
+                  <text x="242" y="18" font-family="Segoe UI, sans-serif" font-size="11" font-weight="700" fill="#e2e8f0">Metod B: Skiva snett 45° över hörn</text>
+                  <polyline points="256,116 345,34 434,116" fill="none" stroke="#64748b" stroke-width="4"/>
+                  <line x1="302" y1="68" x2="388" y2="68" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="4,2"/>
+                  <line x1="319" y1="68" x2="371" y2="68" stroke="#22c55e" stroke-width="6"/>
+                  <text x="345" y="57" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#4ade80" text-anchor="middle">Tavla 1 på plan skiva (+20cm upp)</text>
+                  <line x1="264" y1="108" x2="300" y2="75" stroke="#3b82f6" stroke-width="6"/>
+                  <text x="255" y="76" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#60a5fa">Tavla 0</text>
+                  <line x1="390" y1="75" x2="426" y2="108" stroke="#f59e0b" stroke-width="6"/>
+                  <text x="396" y="76" font-family="Segoe UI, sans-serif" font-size="9" font-weight="700" fill="#fbbf24">Tavla 2</text>
+                  <circle cx="345" cy="144" r="6" fill="#e2e8f0"/>
+                  <line x1="345" y1="144" x2="282" y2="92" stroke="#3b82f6" stroke-width="1.3" stroke-dasharray="3,3"/>
+                  <line x1="345" y1="144" x2="345" y2="72" stroke="#22c55e" stroke-width="1.3" stroke-dasharray="3,3"/>
+                  <line x1="345" y1="144" x2="408" y2="92" stroke="#f59e0b" stroke-width="1.3" stroke-dasharray="3,3"/>
+                  <text x="345" y="164" font-family="Segoe UI, sans-serif" font-size="9" fill="#cbd5e1" text-anchor="middle">Även 3 skivor i U-form på bord funkar!</text>
+                </svg>
+                <div style="font-size:11px; color:var(--text-dim); line-height:1.45;">
+                  <strong>Metod A:</strong> Sätt <strong>Tavla 1 (Mitten)</strong> helt plant på ena väggen 5–10 cm bredvid hörnet (+15–25 cm högre upp).<br/>
+                  <strong>Metod B:</strong> Tejpa Tavla 1 plant på en kartong/skiva tvärs över hörnet. Mjukvaran mäter exakta 3D-vinklar automatiskt!
+                </div>
+              </div>
+
+              <div style="background:var(--bg-panel); border:1px solid var(--border); padding:10px 12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="font-size:12px; font-weight:600; color:#4ade80;">2. Så filmar du (~50 sek i ett klipp • Punkt A = 1.1 m &amp; Punkt B = 0.6 m)</div>
+                <svg viewBox="0 0 460 128" style="width:100%; height:auto; background:#090b0e; border:1px solid var(--border); border-radius:2px;">
+                  <!-- Runda 1 -->
+                  <text x="76" y="15" font-family="Segoe UI, sans-serif" font-size="9.5" font-weight="700" fill="#93c5fd" text-anchor="middle">Runda 1: Punkt A (5 stopp)</text>
+                  <polyline points="26,56 76,24 126,56" fill="none" stroke="#64748b" stroke-width="3"/>
+                  <circle cx="76" cy="88" r="10" fill="rgba(59,130,246,0.22)" stroke="#3b82f6" stroke-width="1.2" stroke-dasharray="2,2"/>
+                  <text x="92" y="91" font-size="8.5" font-weight="700" fill="#93c5fd">A 1.1m</text>
+                  <circle cx="76" cy="88" r="4.5" fill="#e2e8f0"/>
+                  <polygon points="76,88 38,44 114,44" fill="rgba(59,130,246,0.20)" stroke="#3b82f6" stroke-width="1"/>
+                  <text x="76" y="118" font-family="Segoe UI, sans-serif" font-size="8.2" fill="#cbd5e1" text-anchor="middle">Höjd ±30 cm, tilta ±15°, ratt</text>
+
+                  <!-- Runda 2 -->
+                  <line x1="153" y1="8" x2="153" y2="120" stroke="#272b33" stroke-width="1"/>
+                  <text x="230" y="15" font-family="Segoe UI, sans-serif" font-size="9.5" font-weight="700" fill="#fde047" text-anchor="middle">Runda 2: Vrid ±40° (6 stopp)</text>
+                  <polyline points="180,56 230,24 280,56" fill="none" stroke="#64748b" stroke-width="3"/>
+                  <circle cx="230" cy="86" r="10" fill="rgba(234,179,8,0.18)" stroke="#eab308" stroke-width="1.2" stroke-dasharray="2,2"/>
+                  <circle cx="230" cy="86" r="4.5" fill="#e2e8f0"/>
+                  <path d="M 204,84 A 28,28 0 0 1 256,84" fill="none" stroke="#eab308" stroke-width="1.8" stroke-dasharray="3,2"/>
+                  <text x="230" y="106" font-family="Segoe UI, sans-serif" font-size="8.2" fill="#fde047" text-anchor="middle">Vrid +40° H &amp; -40° V</text>
+                  <text x="230" y="118" font-family="Segoe UI, sans-serif" font-size="8.2" fill="#94a3b8" text-anchor="middle">Cam 1+2 &amp; Cam 2+3 delar tavla!</text>
+
+                  <!-- Runda 3 -->
+                  <line x1="307" y1="8" x2="307" y2="120" stroke="#272b33" stroke-width="1"/>
+                  <text x="383" y="15" font-family="Segoe UI, sans-serif" font-size="9.5" font-weight="700" fill="#86efac" text-anchor="middle">Runda 3: Punkt B 0.6 m (6 stopp)</text>
+                  <rect x="330" y="28" width="24" height="32" rx="2" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+                  <rect x="332" y="30" width="9" height="8" fill="#22c55e"/>
+                  <rect x="369" y="28" width="24" height="32" rx="2" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+                  <rect x="382" y="50" width="9" height="8" fill="#22c55e"/>
+                  <rect x="408" y="28" width="24" height="32" rx="2" fill="#111827" stroke="#475569" stroke-width="1.2"/>
+                  <rect x="410" y="50" width="9" height="8" fill="#3b82f6"/>
+                  <circle cx="381" cy="84" r="9" fill="rgba(34,197,94,0.25)" stroke="#22c55e" stroke-width="1.4"/>
+                  <text x="394" y="87" font-size="8.5" font-weight="700" fill="#86efac">B 0.6m</text>
+                  <circle cx="381" cy="84" r="4" fill="#4ade80"/>
+                  <text x="383" y="106" font-family="Segoe UI, sans-serif" font-size="8.2" fill="#86efac" text-anchor="middle">Kliv nära till B! Tavlor i</text>
+                  <text x="383" y="118" font-family="Segoe UI, sans-serif" font-size="8.2" fill="#94a3b8" text-anchor="middle">alla 4 skärmhörn (k1..k4)</text>
+                </svg>
+                <div style="font-size:11px; color:var(--text-dim); line-height:1.42;">
+                  <strong>EN enda video!</strong> Tryck REC på alla 3 + <strong>1 hög handklapp</strong>. Stå helt stilla <strong>1–2 sek</strong> per stopp:<br/>
+                  • <strong>Punkt A (1.1 m):</strong> Stopp 1–5 rakt mot hörnet, sedan Stopp 6–11 vridet ~40° höger &amp; ~40° vänster.<br/>
+                  • <strong>Punkt B (0.6 m):</strong> Kliv nära för Stopp 12–17 så rutorna når ända ut i bildskärmarnas hörn.
+                </div>
+                <button class="btn btn-primary" style="margin-top:4px; align-self:flex-start; padding:5px 10px;" onclick="openCalibDocAction('kit')">
+                  Öppna Stor Visuell Film-Simulator &amp; A4-Fuskblad
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewport-grid" id="calPreviewGrid" style="display:none;">
+            <div class="cam-view" id="calViewCam1">
+              <div class="hud-overlay" id="calHudCam1">CAM 1 VÄNSTER</div>
+              <img id="calImgCam1" alt="cal_cam1_left" style="display:none;" />
+              <div id="calEmptyCam1" style="font-family:var(--font-mono); color:var(--text-muted); font-size:11px; padding:12px; text-align:center;">Ingen kontrollbild ännu</div>
+            </div>
+            <div class="cam-view" id="calViewCam2">
+              <div class="hud-overlay" id="calHudCam2">CAM 2 MITTEN (REF)</div>
+              <img id="calImgCam2" alt="cal_cam2_center" style="display:none;" />
+              <div id="calEmptyCam2" style="font-family:var(--font-mono); color:var(--text-muted); font-size:11px; padding:12px; text-align:center;">Ingen kontrollbild ännu</div>
+            </div>
+            <div class="cam-view" id="calViewCam3">
+              <div class="hud-overlay" id="calHudCam3">CAM 3 HÖGER</div>
+              <img id="calImgCam3" alt="cal_cam3_right" style="display:none;" />
+              <div id="calEmptyCam3" style="font-family:var(--font-mono); color:var(--text-muted); font-size:11px; padding:12px; text-align:center;">Ingen kontrollbild ännu</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="bottom-Split">
+          <div style="background: var(--bg-panel); display: flex; flex-direction: column; min-height: 0;">
+            <div class="section-header">
+              <span>5-Punkts GO / NO-GO Checklista</span>
+              <span id="calOverallBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">-</span>
+            </div>
+            <div class="section-body" style="overflow-y: auto; padding: 6px 8px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Kontrollpunkt</th>
+                    <th>Uppmätt</th>
+                    <th>Grönt krav</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="calChecksBody">
+                  <tr>
+                    <td colspan="4" style="color: var(--text-muted); white-space: normal; padding: 8px;">
+                      Kör "2. Kalibrera Rigg" (eller "Syntetisk Demo") för att se kvalitetsmått och 20% hold-out validering.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-panel); display: flex; flex-direction: column; min-height: 0;">
+            <div class="section-header">
+              <span>Uppmätt OPENCV_FISHEYE &amp; 6-DoF Rigg-geometri</span>
+              <span id="calBaselineBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Baslinje: -</span>
+            </div>
+            <div class="section-body" style="overflow-y: auto; padding: 6px 8px;">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Kamera</th>
+                    <th>fx / fy</th>
+                    <th>cx / cy &amp; k1..k2</th>
+                    <th>Pos (mm)</th>
+                    <th>Yaw / Tilt / Roll</th>
+                    <th>RMS</th>
+                  </tr>
+                </thead>
+                <tbody id="calMetricsBody">
+                  <tr>
+                    <td colspan="6" style="color: var(--text-muted); white-space: normal; padding: 8px;">
+                      Ingen lins- eller 3D-riggdata uppmätt ännu.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section style="background: var(--bg-panel); display: flex; flex-direction: column; min-height: 0;">
+          <div class="section-header">
+            <span>Kalibreringslogg (ChArUco &amp; Verifiering)</span>
+            <button class="btn" style="padding: 1px 6px; font-size: 10px;" onclick="clearLogs()">Rensa</button>
+          </div>
+          <div class="console-output" id="calTerminalLog" style="min-height: 55px;"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- BOTTOM STATUS BAR -->
+    <footer class="statusbar">
+      <div class="status-left">
+        <span class="status-indicator" id="statusLed"></span>
+        <span id="statusHeadline" style="color: var(--text-main); font-weight: 600;">REDO</span>
+        <span style="color: var(--text-muted);">|</span>
+        <span id="statusDetail" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Steg 1: Välj en tagning för att inspektera video och EXIF-data.</span>
+      </div>
+
+      <div class="status-progress-wrap">
+        <span id="osInfoTxt">Windows / macOS</span>
+        <div class="status-progress-bar">
+          <div class="status-progress-fill" id="progressBar"></div>
+        </div>
+        <span id="progressPctTxt" style="min-width: 32px; text-align: right;">0%</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Settings Modal: Engine & Storage Paths -->
+  <div id="settingsModal" class="modal-backdrop" onclick="if (event.target === this) closeSettingsModal()">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+      <div class="modal-header">
+        <span id="settingsModalTitle">Inställningar — Program &amp; Sökvägar</span>
+        <button class="btn" style="padding: 2px 8px;" onclick="closeSettingsModal()">Stäng</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-row">
+          <div class="setting-row-top">
+            <span class="setting-label">Spirula Studio (spirula.exe / spirula)</span>
+            <span class="badge-err" id="stBadgeSpirula">Ej verifierad</span>
+          </div>
+          <div class="setting-input-row">
+            <input type="text" id="setSpirulaExe" placeholder="T.ex. D:\spirula-...\spirula.exe">
+            <button class="btn" onclick="browseSettingFile('setSpirulaExe', 'Välj Spirula Studio-binär')">Bläddra...</button>
+          </div>
+          <span class="setting-hint">Används för Vulkan GPU-videodekodning i Steg 2, Vulkan SfM samt 3DGS-träning.</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-top">
+            <span class="setting-label">LichtFeld Studio (LichtFeld-Studio.exe / LichtFeld-Studio)</span>
+            <span class="badge-err" id="stBadgeLichtfeld">Ej verifierad</span>
+          </div>
+          <div class="setting-input-row">
+            <input type="text" id="setLichtfeldExe" placeholder="T.ex. D:\LichtFeldStudio\bin\LichtFeld-Studio.exe">
+            <button class="btn" onclick="browseSettingFile('setLichtfeldExe', 'Välj LichtFeld Studio-binär')">Bläddra...</button>
+          </div>
+          <span class="setting-hint">Används för LichtFeld GUI och Steg 4 (3DGUT / MCMC-träning).</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-top">
+            <span class="setting-label">COLMAP (colmap.bat / colmap)</span>
+            <span class="badge-err" id="stBadgeColmap">Ej verifierad</span>
+          </div>
+          <div class="setting-input-row">
+            <input type="text" id="setColmapExe" placeholder="T.ex. D:\colmap\COLMAP.bat eller colmap i PATH">
+            <button class="btn" onclick="browseSettingFile('setColmapExe', 'Välj COLMAP-binär eller .bat')">Bläddra...</button>
+          </div>
+          <span class="setting-hint">Valfri reservmotor för rigg-buntjusterad SfM om Spirula SfM inte används.</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-top">
+            <span class="setting-label">Inspelningsmapp (CAPTURES_ROOT)</span>
+            <span class="badge-err" id="stBadgeCaptures">Ej verifierad</span>
+          </div>
+          <div class="setting-input-row">
+            <input type="text" id="setCapturesRoot" placeholder="T.ex. D:\3DGS_Captures">
+            <button class="btn" onclick="browseSettingDir('setCapturesRoot')">Bläddra...</button>
+          </div>
+          <span class="setting-hint">Standardmapp där tagningar kopieras in från kamerornas SD-kort och lagras.</span>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-top">
+            <span class="setting-label">Standard Extraherings-Backend &amp; LichtFeld MCP URL</span>
+            <span class="setting-hint" style="font-family: ui-monospace, monospace;">config/settings.json</span>
+          </div>
+          <div class="setting-input-row">
+            <select id="setExtractBackend" style="max-width: 270px;">
+              <option value="auto">auto (Spirula Vulkan GPU -> OpenCV)</option>
+              <option value="spirula_gpu">spirula_gpu (Vulkan Video Decode)</option>
+              <option value="opencv_parallel">opencv_parallel (Multi-Thread CPU)</option>
+            </select>
+            <input type="text" id="setMcpUrl" placeholder="http://127.0.0.1:45677/mcp">
+          </div>
+          <span class="setting-hint">Välj standardmotor för bildextraktion i Steg 2 samt telemetri-adress till LichtFeld MCP.</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          <button class="btn" onclick="autoDetectEngines()">Sök automatiskt på datorn</button>
+          <button class="btn" onclick="createDesktopShortcut()" title="Skapar OptiGSRigg Studio-genväg med riktig ikon på Skrivbordet (startar utan svart CMD-fönster)">Skapa Skrivbordsgenväg (med ikon)</button>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <button class="btn" onclick="closeSettingsModal()">Avbryt</button>
+          <button class="btn btn-primary" onclick="saveSettingsModal()">Spara inställningar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let appState = {
+      capturesRoot: "D:\\3DGS_Captures",
+      settings: null,
+      allTakes: [],
+      selectedTake: null,
+      inspectedMeta: null,
+      previewCam: "cam2_center", // Default: Center camera as requested!
+      previewMode: "frame",      // 'frame' (fast ffmpeg frame/cover) or 'video' (HTML5 video stream)
+      previewTime: "cover",
+      calibPreviewMode: "guide",
+      userPickedCalibMode: false,
+      charucoStatus: null,
+      userChangedRigMode: false,
+      frames: [],
+      currentFrameIdx: 0,
+      logIndex: 0,
+      isRunning: false,
+      defaultLutPath: "",
+      lastAutoLutKey: null
+    };
+
+    async function callBackend(action, payload = {}) {
+      if (window.pywebview && window.pywebview.api && typeof window.pywebview.api[action] === "function") {
+        return await window.pywebview.api[action](payload);
+      }
+      const res = await fetch(`/api/${action}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    }
+
+    function switchTab(tab) {
+      document.getElementById("tabBtnCalib").classList.toggle("active", tab === "calib");
+      document.getElementById("tabBtnStep1").classList.toggle("active", tab === "step1");
+      document.getElementById("tabBtnPipeline").classList.toggle("active", tab === "pipeline");
+      document.getElementById("viewCalib").classList.toggle("active", tab === "calib");
+      document.getElementById("viewStep1").classList.toggle("active", tab === "step1");
+      document.getElementById("viewPipeline").classList.toggle("active", tab === "pipeline");
+      if (tab === "pipeline") {
+        validatePaths();
+      } else if (tab === "calib") {
+        refreshCharucoStatus();
+      }
+    }
+
+    async function refreshAll() {
+      const data = await callBackend("get_overview");
+      if (!data) return;
+
+      if (data.settings) {
+        applySettingsToUi(data.settings);
+      }
+      if (data.default_lut_path) {
+        appState.defaultLutPath = data.default_lut_path;
+        const lutInp = document.getElementById("lutPathInput");
+        if (lutInp && !lutInp.value.trim()) {
+          lutInp.value = data.default_lut_path;
+        }
+      }
+      appState.capturesRoot = data.captures_root || "D:\\3DGS_Captures";
+      document.getElementById("osInfoTxt").textContent = data.os_label || "";
+
+      // 1A. Render Camera / SD Card Status Table
+      const cams = [
+        { key: "cam1_left", label: "Cam 1 Vänster", id: "CAM0_LEFT.id" },
+        { key: "cam2_center", label: "Cam 2 Mitten", id: "CAM1_MID.id" },
+        { key: "cam3_right", label: "Cam 3 Höger", id: "CAM2_RIGHT.id" }
+      ];
+      let connCount = 0;
+      document.getElementById("sdTableBody").innerHTML = cams.map(c => {
+        const info = (data.sd_status && data.sd_status[c.key]) || {};
+        if (info.connected) {
+          connCount++;
+          const space = info.total_gb ? `${info.free_gb} / ${info.total_gb} GB` : "-";
+          const calcTotalMb = info.clips_total_mb !== undefined
+            ? info.clips_total_mb
+            : Math.round((info.clips || []).reduce((acc, x) => acc + (x.size_mb || 0), 0) * 10) / 10;
+          const clipTxt = info.clip_count > 0
+            ? `<span style="color: var(--status-ok); font-weight: 600;">${info.clip_count} klipp (${calcTotalMb} MB)</span>`
+            : `<span style="color: var(--status-warn);">0 MP4 på kortet</span>`;
+          return `
+            <tr style="cursor: pointer;" onclick="setPreviewCam('${c.key}')" title="Klicka för att visa ${c.label}">
+              <td>${c.label}</td>
+              <td>${info.id_file || c.id}</td>
+              <td>${info.drive}</td>
+              <td>${space}</td>
+              <td>${clipTxt}</td>
+            </tr>
+          `;
+        } else {
+          return `
+            <tr>
+              <td>${c.label}</td>
+              <td>${c.id}</td>
+              <td>-</td>
+              <td>-</td>
+              <td style="color: var(--text-muted);">Ej ansluten</td>
+            </tr>
+          `;
+        }
+      }).join("");
+      document.getElementById("sdSummaryTxt").textContent = `${connCount}/3 kamerakort anslutna`;
+
+      // Unmarked DCIM drives helper
+      const unmarked = (data.sd_status && data.sd_status._unmarked_dcim) || [];
+      const unmarkedBox = document.getElementById("unmarkedCardBox");
+      if (unmarked.length > 0) {
+        unmarkedBox.style.display = "block";
+        document.getElementById("unmarkedDriveSelect").innerHTML =
+          unmarked.map(d => `<option value="${d}">${d}</option>`).join("");
+      } else {
+        unmarkedBox.style.display = "none";
+      }
+
+      // 1B. Build SD Card Takes (from data.sd_takes or directly from data.sd_status) + Disk Takes
+      let sdTakes = data.sd_takes || [];
+      if (sdTakes.length === 0 && data.sd_status) {
+        const c1List = (data.sd_status.cam1_left && data.sd_status.cam1_left.clips) || [];
+        const c2List = (data.sd_status.cam2_center && data.sd_status.cam2_center.clips) || [];
+        const c3List = (data.sd_status.cam3_right && data.sd_status.cam3_right.clips) || [];
+        const maxLen = Math.max(c1List.length, c2List.length, c3List.length);
+        for (let i = 0; i < maxLen; i++) {
+          const fromEnd = i + 1;
+          const takeNum = maxLen - i;
+          const c1 = c1List[i] || null;
+          const c2 = c2List[i] || null;
+          const c3 = c3List[i] || null;
+          const ref = c2 || c1 || c3;
+          const present = [c1, c2, c3].filter(Boolean).length;
+          const totMb = Math.round([c1, c2, c3].filter(Boolean).reduce((s, x) => s + (x.size_mb || 0), 0) * 10) / 10;
+          sdTakes.push({
+            id: `sd_${fromEnd}`,
+            source: "sd",
+            from_end: fromEnd,
+            take_num: takeNum,
+            name: ref ? ref.name : `Take_${takeNum}`,
+            mtime_str: ref ? ref.mtime_str : "-",
+            cams_present: present,
+            total_mb: totMb,
+            paths: {
+              cam1_left: c1 ? c1.path : "",
+              cam2_center: c2 ? c2.path : "",
+              cam3_right: c3 ? c3.path : ""
+            }
+          });
+        }
+      }
+
+      const sep = appState.capturesRoot.includes("/") ? "/" : "\\";
+      const diskTakes = (data.sessions || [])
+        .filter(s => s.mp4_count > 0 || s.has_sfm)
+        .map(s => ({
+          ...s,
+          source: "disk",
+          session_dir: s.session_dir || (s.raw_dir ? s.raw_dir.replace(/[\\/]raw$/, "") : ""),
+          mtime_str: s.mtime_str || s.name.replace("Session_", ""),
+          total_mb: s.total_mb !== undefined ? s.total_mb : "-",
+          paths: s.paths || {
+            cam1_left: `${s.raw_dir}${sep}cam1_left.mp4`,
+            cam2_center: `${s.raw_dir}${sep}cam2_center.mp4`,
+            cam3_right: `${s.raw_dir}${sep}cam3_right.mp4`
+          }
+        }));
+
+      appState.allTakes = [...sdTakes, ...diskTakes];
+
+      const calTakeSel = document.getElementById("calTakeSelect");
+      if (calTakeSel) {
+        const curCalDir = (document.getElementById("calRawDirInput")?.value || "").trim();
+        const optsHtml = ['<option value="">-- Välj importerad tagning --</option>']
+          .concat(diskTakes.map(s => `<option value="${s.raw_dir}">${s.name} (${s.mp4_count}/3 MP4)</option>`))
+          .join("");
+        calTakeSel.innerHTML = optsHtml;
+        if (curCalDir && diskTakes.some(s => s.raw_dir === curCalDir)) {
+          calTakeSel.value = curCalDir;
+        }
+      }
+
+      document.getElementById("takesCountTxt").textContent =
+        `${sdTakes.length} på SD-kort • ${diskTakes.length} på disk`;
+
+      const tbody = document.getElementById("takesTableBody");
+      if (appState.allTakes.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="color: var(--text-muted);">Inga tagningar hittades på SD-kort eller i ${appState.capturesRoot}</td></tr>`;
+      } else {
+        tbody.innerHTML = appState.allTakes.map((t, idx) => {
+          const isSd = t.source === "sd";
+          const srcBadge = isSd
+            ? `<span style="color: var(--status-active); font-weight: 600;">SD #${t.take_num}</span>`
+            : `<span style="color: var(--status-ok);">Disk</span>`;
+          const camsCnt = isSd ? t.cams_present : t.mp4_count;
+          const camsColor = camsCnt === 3 ? "var(--status-ok)" : "var(--status-warn)";
+          return `
+            <tr id="takeRow_${idx}" onclick="selectTake(${idx})">
+              <td>${srcBadge}</td>
+              <td style="font-weight: 600;">${t.name}</td>
+              <td>${t.mtime_str}</td>
+              <td style="color: ${camsColor}; font-weight: 600;">${camsCnt}/3</td>
+              <td>${t.total_mb} MB</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // Auto-select first available take if none selected yet
+      if (appState.allTakes.length > 0 && !appState.selectedTake) {
+        await selectTake(0);
+      }
+      if (document.getElementById("viewPipeline").classList.contains("active")) {
+        await validatePaths();
+      }
+      await refreshCharucoStatus();
+    }
+
+    async function assignCardId(idFile) {
+      const drive = document.getElementById("unmarkedDriveSelect").value;
+      if (!drive) return;
+      await callBackend("write_sd_id_file", { drive, id_file: idFile });
+      await refreshAll();
+    }
+
+    async function selectTake(idx) {
+      const take = appState.allTakes[idx];
+      if (!take) return;
+      appState.selectedTake = take;
+
+      // Highlight selected row
+      document.querySelectorAll("#takesTableBody tr").forEach((tr, i) => {
+        tr.classList.toggle("selected", i === idx);
+      });
+
+      // Suggest a clean project name
+      const nameInput = document.getElementById("customProjectName");
+      if (take.source === "sd") {
+        const cleanDate = (take.mtime_str || "").replace(/[-:]/g, "").replace(" ", "_").slice(0, 15);
+        nameInput.value = `Tagning_${String(take.take_num).padStart(2, "0")}_${cleanDate}`;
+        document.getElementById("selectedTakeSourceBadge").textContent = `Källa: SD-kort (Tagning #${take.take_num})`;
+        document.getElementById("sdProjectActions").style.display = "flex";
+        document.getElementById("diskProjectActions").style.display = "none";
+      } else {
+        nameInput.value = take.name;
+        document.getElementById("selectedTakeSourceBadge").textContent = `Källa: Lokal mapp (${take.name})`;
+        document.getElementById("sdProjectActions").style.display = "none";
+        document.getElementById("diskProjectActions").style.display = "flex";
+        document.getElementById("rawDirInput").value = take.raw_dir;
+        document.getElementById("projDirInput").value = take.proj_dir;
+        const calRawInp = document.getElementById("calRawDirInput");
+        if (calRawInp && (!calRawInp.value.trim() || calRawInp.dataset.autoSynced === "1")) {
+          calRawInp.value = take.raw_dir;
+          calRawInp.dataset.autoSynced = "1";
+        }
+        document.getElementById("activeProjectBadge").textContent = take.name;
+      }
+      updateTargetPreview();
+
+      // Reset preview time to instant embedded DJI cover
+      appState.previewTime = "cover";
+      appState.inspectedMeta = null;
+      document.getElementById("rawVideoTimeSlider").value = 0;
+      document.getElementById("rawVideoTimeReadout").textContent = "Cover (Direkt)";
+
+      // Show camera preview immediately (50ms) without waiting for ffprobe!
+      updatePreviewMonitor();
+
+      // Run FFprobe / EXIF inspection on all 3 cameras in parallel
+      document.getElementById("exifTakeLabel").textContent = `Läser EXIF/FFprobe för ${take.name}...`;
+      try {
+        const inspection = await callBackend("inspect_take", { paths: take.paths });
+        appState.inspectedMeta = inspection;
+        renderExifMatrix(take, inspection);
+        updatePreviewMonitor();
+      } catch (err) {
+        document.getElementById("exifTakeLabel").textContent = `Kunde inte läsa EXIF (${err.message})`;
+      }
+    }
+
+    function updateTargetPreview() {
+      const val = (document.getElementById("customProjectName").value || "").trim() || "Namnlöst_Projekt";
+      const sep = appState.capturesRoot.includes("/") ? "/" : "\\";
+      document.getElementById("targetFolderPreview").textContent =
+        `${appState.capturesRoot}${sep}${val}${sep}raw`;
+    }
+
+    function setPreviewCam(cam) {
+      appState.previewCam = cam;
+      ["Cam2", "Cam1", "Cam3", "All3"].forEach(id => {
+        document.getElementById("btnPreview" + id).classList.remove("active-toggle");
+      });
+      if (cam === "cam2_center") document.getElementById("btnPreviewCam2").classList.add("active-toggle");
+      else if (cam === "cam1_left") document.getElementById("btnPreviewCam1").classList.add("active-toggle");
+      else if (cam === "cam3_right") document.getElementById("btnPreviewCam3").classList.add("active-toggle");
+      else if (cam === "all3") document.getElementById("btnPreviewAll3").classList.add("active-toggle");
+      updatePreviewMonitor();
+    }
+
+    function setPreviewMode(mode) {
+      appState.previewMode = mode;
+      document.getElementById("btnModeFrame").classList.toggle("active-toggle", mode === "frame");
+      document.getElementById("btnModeVideo").classList.toggle("active-toggle", mode === "video");
+      updatePreviewMonitor();
+    }
+
+    function seekPreviewTime(t) {
+      appState.previewTime = t;
+      if (t === "cover") {
+        document.getElementById("rawVideoTimeReadout").textContent = "Cover (Direkt)";
+        document.getElementById("rawVideoTimeSlider").value = 0;
+      } else {
+        const sec = parseFloat(t);
+        document.getElementById("rawVideoTimeReadout").textContent = `Tid: ${sec.toFixed(1)} s`;
+        document.getElementById("rawVideoTimeSlider").value = sec;
+      }
+
+      if (appState.previewMode === "video") {
+        const vid = document.getElementById("singlePreviewVideo");
+        if (vid && t !== "cover") {
+          vid.currentTime = parseFloat(t);
+        }
+      } else {
+        updatePreviewMonitor();
+      }
+    }
+
+    function updatePreviewMonitor() {
+      const take = appState.selectedTake;
+      if (!take || !take.paths) return;
+
+      const singleWrap = document.getElementById("singlePreviewWrap");
+      const tripleWrap = document.getElementById("triplePreviewWrap");
+      const imgEl = document.getElementById("singlePreviewImg");
+      const vidEl = document.getElementById("singlePreviewVideo");
+      const emptyEl = document.getElementById("singlePreviewEmpty");
+
+      if (appState.previewCam === "all3") {
+        singleWrap.style.display = "none";
+        tripleWrap.style.display = "grid";
+        vidEl.pause();
+
+        const cams = [
+          { key: "cam1_left", imgId: "tripleImg1", hudId: "tripleHud1", title: "CAM 1 VÄNSTER" },
+          { key: "cam2_center", imgId: "tripleImg2", hudId: "tripleHud2", title: "CAM 2 MITTEN (REF)" },
+          { key: "cam3_right", imgId: "tripleImg3", hudId: "tripleHud3", title: "CAM 3 HÖGER" }
+        ];
+        cams.forEach(c => {
+          const p = take.paths[c.key];
+          const m = (appState.inspectedMeta && appState.inspectedMeta.cameras && appState.inspectedMeta.cameras[c.key]) || {};
+          document.getElementById(c.hudId).textContent = m.exists
+            ? `${c.title} • ${m.effective_width}×${m.effective_height} (${m.aspect_ratio}) @ ${m.fps}fps`
+            : `${c.title} • SAKNAS`;
+          const el = document.getElementById(c.imgId);
+          if (p) {
+            el.src = `/video_preview?path=${encodeURIComponent(p)}&t=${appState.previewTime}`;
+            el.style.display = "block";
+          } else {
+            el.style.display = "none";
+          }
+        });
+        return;
+      }
+
+      // Single Camera Mode (Default: cam2_center)
+      singleWrap.style.display = "flex";
+      tripleWrap.style.display = "none";
+
+      const camKey = appState.previewCam;
+      const camPath = take.paths[camKey];
+      const camTitles = {
+        cam1_left: "CAM 1 VÄNSTER (CAM0_LEFT)",
+        cam2_center: "CAM 2 MITTEN (CAM1_MID • REFERENS)",
+        cam3_right: "CAM 3 HÖGER (CAM2_RIGHT)"
+      };
+      const meta = (appState.inspectedMeta && appState.inspectedMeta.cameras && appState.inspectedMeta.cameras[camKey]) || {};
+
+      if (!camPath || meta.exists === false) {
+        imgEl.style.display = "none";
+        vidEl.pause();
+        vidEl.style.display = "none";
+        emptyEl.style.display = "block";
+        emptyEl.textContent = `Ingen videofil hittades för ${camTitles[camKey]}`;
+        document.getElementById("singlePreviewHud").textContent = `${camTitles[camKey]} • FIL SAKNAS`;
+        return;
+      }
+
+      if (meta.duration_sec > 0) {
+        document.getElementById("rawVideoTimeSlider").max = Math.max(1, Math.floor(meta.duration_sec));
+      }
+
+      const fileName = meta.name || camPath.split(/[\\/]/).pop();
+      const resDetails = meta.effective_width
+        ? ` • ${meta.effective_width}×${meta.effective_height} (${meta.aspect_ratio}) • ${meta.fps} fps • ${meta.bit_depth} ${meta.codec}`
+        : "";
+      document.getElementById("singlePreviewHud").textContent =
+        `${camTitles[camKey]} • ${fileName}${resDetails}`;
+      emptyEl.style.display = "none";
+
+      if (appState.previewMode === "video") {
+        imgEl.style.display = "none";
+        vidEl.style.display = "block";
+        const streamUrl = `/video_stream?path=${encodeURIComponent(camPath)}`;
+        if (vidEl.getAttribute("data-src") !== streamUrl) {
+          vidEl.setAttribute("data-src", streamUrl);
+          vidEl.src = streamUrl;
+        }
+      } else {
+        vidEl.pause();
+        vidEl.style.display = "none";
+        imgEl.style.display = "block";
+        imgEl.src = `/video_preview?path=${encodeURIComponent(camPath)}&t=${appState.previewTime}`;
+      }
+    }
+
+    function renderExifMatrix(take, inspection) {
+      if (!inspection || !inspection.cameras) return;
+      document.getElementById("exifTakeLabel").textContent =
+        `${take.name} • Inspelad: ${take.mtime_str}`;
+
+      const warnBox = document.getElementById("exifWarningsBox");
+      if (inspection.warnings && inspection.warnings.length > 0) {
+        warnBox.innerHTML = inspection.warnings.map(w => `<div class="warn-banner">${w}</div>`).join("");
+      } else if (inspection.all_ok) {
+        warnBox.innerHTML = `<div class="ok-banner">ALLA 3 KAMEROR VALIDERADE: Samma upplösning, samma bildfrekvens (FPS) och ljudspår redo för klapp-synk.</div>`;
+      } else {
+        warnBox.innerHTML = "";
+      }
+
+      const c1 = inspection.cameras.cam1_left || {};
+      const c2 = inspection.cameras.cam2_center || {};
+      const c3 = inspection.cameras.cam3_right || {};
+
+      const res1 = c1.exists ? `${c1.effective_width}×${c1.effective_height} (${c1.aspect_ratio})` : "-";
+      const res2 = c2.exists ? `${c2.effective_width}×${c2.effective_height} (${c2.aspect_ratio})` : "-";
+      const res3 = c3.exists ? `${c3.effective_width}×${c3.effective_height} (${c3.aspect_ratio})` : "-";
+      const resMismatch = (c1.exists && c2.exists && res1 !== res2) || (c2.exists && c3.exists && res2 !== res3);
+
+      const shMismatch = (c1.shutter_denom && c2.shutter_denom && c1.shutter_denom !== c2.shutter_denom) ||
+                         (c2.shutter_denom && c3.shutter_denom && c2.shutter_denom !== c3.shutter_denom);
+      const isoMismatch = (c1.iso_val && c2.iso_val && c1.iso_val !== c2.iso_val) ||
+                          (c2.iso_val && c3.iso_val && c2.iso_val !== c3.iso_val);
+      const wbMismatch = (c1.wb_kelvin && c2.wb_kelvin && c1.wb_kelvin !== c2.wb_kelvin) ||
+                         (c2.wb_kelvin && c3.wb_kelvin && c2.wb_kelvin !== c3.wb_kelvin);
+      const texMismatch = (c1.sharpness_denoise && c2.sharpness_denoise && c1.sharpness_denoise !== c2.sharpness_denoise) ||
+                          (c2.sharpness_denoise && c3.sharpness_denoise && c2.sharpness_denoise !== c3.sharpness_denoise);
+      const colorMismatch = (c1.color_mode && c2.color_mode && c1.color_mode !== "-" && c2.color_mode !== "-" && c1.color_mode !== c2.color_mode) ||
+                            (c2.color_mode && c3.color_mode && c2.color_mode !== "-" && c3.color_mode !== "-" && c2.color_mode !== c3.color_mode);
+
+      const rows = [
+        {
+          label: "Filnamn",
+          v1: c1.exists ? c1.name : "SAKNAS",
+          v2: c2.exists ? c2.name : "SAKNAS",
+          v3: c3.exists ? c3.name : "SAKNAS"
+        },
+        {
+          label: "Slutartid (Shutter Speed)",
+          v1: c1.exists ? (c1.shutter_speed || "-") : "-",
+          v2: c2.exists ? (c2.shutter_speed || "-") : "-",
+          v3: c3.exists ? (c3.shutter_speed || "-") : "-",
+          mismatch: shMismatch,
+          highlight: true
+        },
+        {
+          label: "ISO & Sensorförstärkning (Gain)",
+          v1: c1.exists ? (c1.iso_str || "-") : "-",
+          v2: c2.exists ? (c2.iso_str || "-") : "-",
+          v3: c3.exists ? (c3.iso_str || "-") : "-",
+          mismatch: isoMismatch,
+          highlight: true
+        },
+        {
+          label: "Färgläge / Profil (EXIF)",
+          v1: c1.exists ? (c1.color_mode || "-") : "-",
+          v2: c2.exists ? (c2.color_mode || "-") : "-",
+          v3: c3.exists ? (c3.color_mode || "-") : "-",
+          mismatch: colorMismatch,
+          highlight: true
+        },
+        {
+          label: "Vitbalans (Kelvin & Läge)",
+          v1: c1.exists ? (c1.white_balance || "-") : "-",
+          v2: c2.exists ? (c2.white_balance || "-") : "-",
+          v3: c3.exists ? (c3.white_balance || "-") : "-",
+          mismatch: wbMismatch,
+          highlight: true
+        },
+        {
+          label: "Bländare, Optik (FOV) & EIS",
+          v1: c1.exists ? (c1.aperture_fov || "-") : "-",
+          v2: c2.exists ? (c2.aperture_fov || "-") : "-",
+          v3: c3.exists ? (c3.aperture_fov || "-") : "-"
+        },
+        {
+          label: "Exponering & Scenljus (LV)",
+          v1: c1.exists ? (c1.exposure_ev || "-") : "-",
+          v2: c2.exists ? (c2.exposure_ev || "-") : "-",
+          v3: c3.exists ? (c3.exposure_ev || "-") : "-"
+        },
+        {
+          label: "Skärpa & Brusreducering",
+          v1: c1.exists ? (c1.sharpness_denoise || "-") : "-",
+          v2: c2.exists ? (c2.sharpness_denoise || "-") : "-",
+          v3: c3.exists ? (c3.sharpness_denoise || "-") : "-",
+          mismatch: texMismatch
+        },
+        {
+          label: "Kamerasensor, Serienr & FW",
+          v1: c1.exists ? (c1.sensor_hw || "-") : "-",
+          v2: c2.exists ? (c2.sensor_hw || "-") : "-",
+          v3: c3.exists ? (c3.sensor_hw || "-") : "-"
+        },
+        {
+          label: "Effektiv Upplösning (Aspekt)",
+          v1: res1,
+          v2: res2,
+          v3: res3,
+          mismatch: resMismatch
+        },
+        {
+          label: "Frame Rate (FPS)",
+          v1: c1.exists ? `${c1.fps} fps (${c1.fps_raw})` : "-",
+          v2: c2.exists ? `${c2.fps} fps (${c2.fps_raw})` : "-",
+          v3: c3.exists ? `${c3.fps} fps (${c3.fps_raw})` : "-"
+        },
+        {
+          label: "Längd & Antal Bildrutor",
+          v1: c1.exists ? `${c1.duration_str} (${c1.nb_frames} frames)` : "-",
+          v2: c2.exists ? `${c2.duration_str} (${c2.nb_frames} frames)` : "-",
+          v3: c3.exists ? `${c3.duration_str} (${c3.nb_frames} frames)` : "-"
+        },
+        {
+          label: "EXIF Inspelningstid & Timecode",
+          v1: c1.exists ? `${c1.creation_time} • TC ${c1.timecode}` : "-",
+          v2: c2.exists ? `${c2.creation_time} • TC ${c2.timecode}` : "-",
+          v3: c3.exists ? `${c3.creation_time} • TC ${c3.timecode}` : "-"
+        },
+        {
+          label: "Färgdjup, Codec & Färgrymd",
+          v1: c1.exists ? `${c1.bit_depth} ${c1.codec} (${c1.pix_fmt}) • ${c1.color_space}` : "-",
+          v2: c2.exists ? `${c2.bit_depth} ${c2.codec} (${c2.pix_fmt}) • ${c2.color_space}` : "-",
+          v3: c3.exists ? `${c3.bit_depth} ${c2.codec} (${c3.pix_fmt}) • ${c3.color_space}` : "-"
+        },
+        {
+          label: "Video-Bitrate & Filstorlek",
+          v1: c1.exists ? `${c1.video_bitrate_mbps} Mbps • ${c1.size_mb} MB` : "-",
+          v2: c2.exists ? `${c2.video_bitrate_mbps} Mbps • ${c2.size_mb} MB` : "-",
+          v3: c3.exists ? `${c3.video_bitrate_mbps} Mbps • ${c3.size_mb} MB` : "-"
+        },
+        {
+          label: "Ljudspår (Klapp-synk)",
+          v1: c1.exists ? `${c1.audio_codec} • ${c1.audio_sample_rate} • ${c1.audio_channels}ch (${c1.audio_bitrate_kbps} kbps)` : "-",
+          v2: c2.exists ? `${c2.audio_codec} • ${c2.audio_sample_rate} • ${c2.audio_channels}ch (${c2.audio_bitrate_kbps} kbps)` : "-",
+          v3: c3.exists ? `${c3.audio_codec} • ${c3.audio_sample_rate} • ${c3.audio_channels}ch (${c3.audio_bitrate_kbps} kbps)` : "-"
+        },
+        {
+          label: "Inbäddade Telemetrispår",
+          v1: c1.exists ? (c1.dji_streams.join(", ") || "-") : "-",
+          v2: c2.exists ? (c2.dji_streams.join(", ") || "-") : "-",
+          v3: c3.exists ? (c3.dji_streams.join(", ") || "-") : "-"
+        }
+      ];
+
+      document.getElementById("exifMatrixBody").innerHTML = rows.map(r => {
+        const cls = r.mismatch ? 'class="cell-mismatch"' : (r.highlight ? 'style="color:#58a6ff; font-weight:600;"' : "");
+        return `
+          <tr>
+            <td style="color: var(--text-dim); font-weight: 600;">${r.label}</td>
+            <td ${cls}>${r.v1}</td>
+            <td ${cls}>${r.v2}</td>
+            <td ${cls}>${r.v3}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function createProjectFromSelection(actionMode) {
+      const take = appState.selectedTake;
+      if (!take) return;
+      const projectName = document.getElementById("customProjectName").value.trim();
+      if (!projectName) {
+        alert("Ange ett projektnamn först.");
+        return;
+      }
+
+      const res = await callBackend("start_named_project", {
+        project_name: projectName,
+        source: take.source,
+        from_end: take.from_end || 1,
+        session_dir: take.session_dir || "",
+        paths: take.paths || {},
+        action_mode: actionMode
+      });
+
+      if (res && res.ok) {
+        document.getElementById("rawDirInput").value = res.raw_dir;
+        document.getElementById("projDirInput").value = res.proj_dir;
+        document.getElementById("activeProjectBadge").textContent = res.project_name;
+        if (!res.copy_started) {
+          await refreshAll();
+        }
+      } else if (res && res.error) {
+        alert(res.error);
+      }
+    }
+
+    function renderCopyProgress(cs) {
+      const panel = document.getElementById("copyProgressPanel");
+      if (!cs) {
+        panel.style.display = "none";
+        return;
+      }
+      panel.style.display = "flex";
+
+      const titleEl = document.getElementById("copyHeaderTitle");
+      const speedEl = document.getElementById("copySpeedEtaTxt");
+      const totMbEl = document.getElementById("copyTotalMbTxt");
+      const totPctEl = document.getElementById("copyTotalPctTxt");
+      const totBarEl = document.getElementById("copyTotalBarFill");
+      const cancelBtn = document.getElementById("btnCancelCopy");
+      const doneBtn = document.getElementById("btnCopyDoneGoStep2");
+
+      const fmtSize = (mb) => mb >= 1024 ? `${(mb / 1024).toFixed(2)} GB (${mb.toFixed(0)} MB)` : `${mb.toFixed(1)} MB`;
+
+      if (cs.error) {
+        titleEl.textContent = `FEL / AVBRUTEN: ${cs.error}`;
+        titleEl.style.color = "var(--status-err)";
+        speedEl.textContent = "-";
+        totBarEl.style.background = "var(--status-err)";
+        cancelBtn.style.display = "none";
+        doneBtn.style.display = "none";
+      } else if (cs.done) {
+        titleEl.textContent = `KLAR – Alla ${cs.total_files} filer kopierade till '${cs.project_name}'`;
+        titleEl.style.color = "var(--status-ok)";
+        speedEl.textContent = "100% Verifierad";
+        totBarEl.style.background = "var(--status-ok)";
+        cancelBtn.style.display = "none";
+        doneBtn.style.display = "inline-flex";
+      } else {
+        titleEl.textContent = `KOPIERAR FIL ${cs.current_file_idx} AV ${cs.total_files} TILL '${cs.project_name}'`;
+        titleEl.style.color = "var(--status-active)";
+        speedEl.textContent = `${cs.speed_mbps || 0} MB/s • Kvar: ~${cs.eta_sec || 0} s`;
+        totBarEl.style.background = "var(--status-active)";
+        cancelBtn.style.display = "inline-flex";
+        doneBtn.style.display = "none";
+      }
+
+      totMbEl.textContent = `Totalt: ${fmtSize(cs.total_copied_mb || 0)} av ${fmtSize(cs.total_size_mb || 0)}`;
+      totPctEl.textContent = `${cs.overall_pct || 0}%`;
+      totBarEl.style.width = `${cs.overall_pct || 0}%`;
+
+      const listEl = document.getElementById("copyFilesList");
+      listEl.innerHTML = (cs.files || []).map(f => {
+        const isDone = f.state === "done";
+        const isCopying = f.state === "copying";
+        const barColor = isDone ? "var(--status-ok)" : (isCopying ? "var(--status-active)" : "#383b42");
+        const statusColor = isDone ? "var(--status-ok)" : (isCopying ? "#ffffff" : "var(--text-muted)");
+        const stateTag = isDone ? "KLAR" : (isCopying ? `${f.pct}%` : "Väntar");
+        return `
+          <div style="font-family: var(--font-mono); font-size: 10.5px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+              <span style="color: ${statusColor}; font-weight: ${isCopying || isDone ? '600' : '400'};">
+                Fil ${f.idx}/${cs.total_files}: ${f.cam_label}
+              </span>
+              <span style="color: ${statusColor};">
+                ${f.copied_mb.toFixed(1)} / ${f.size_mb.toFixed(1)} MB (${stateTag})
+              </span>
+            </div>
+            <div style="width: 100%; height: 5px; background: #15171a; border: 1px solid var(--border); overflow: hidden;">
+              <div style="height: 100%; width: ${f.pct}%; background: ${barColor}; transition: width 0.12s;"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function activateAndGoToStep2() {
+      const take = appState.selectedTake;
+      const newName = document.getElementById("customProjectName").value.trim();
+      if (take && take.source === "disk" && newName && newName !== take.name) {
+        await createProjectFromSelection("rename");
+      }
+      switchTab("pipeline");
+    }
+
+    function renderCalibrationTable(checkRes) {
+      const mode = document.getElementById("rigModeSelect").value;
+      const badge = document.getElementById("calibStatusBadge");
+      const tbody = document.getElementById("calibTableBody");
+      if (!checkRes) return;
+
+      let calib = null;
+      let isMeasuredOnThisProject = false;
+
+      if (mode === "auto_calibrate") {
+        if (checkRes.project_calibration) {
+          calib = checkRes.project_calibration;
+          isMeasuredOnThisProject = true;
+        }
+      } else if (checkRes.preset_calibrations && checkRes.preset_calibrations[mode]) {
+        calib = checkRes.preset_calibrations[mode];
+      }
+
+      if (!calib) {
+        badge.textContent = "Ej kalibrerad ännu";
+        badge.style.color = "var(--text-muted)";
+        const stepHint = checkRes.n_triplets > 0
+          ? "Mäter kameravinklar (Pos X, Yaw, Pitch, Roll) ur de extraherade bild-triorna..."
+          : "Ej kalibrerad ännu — Vi vet inte kameravinklarna för detta klipp förrän Steg 2 (Ljudsynk & Bildextraktion) har körts.";
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" style="color: var(--text-muted); white-space: normal; line-height: 1.45; padding: 8px;">
+              ${stepHint}
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      if (isMeasuredOnThisProject) {
+        badge.textContent = "UPPMÄTT PÅ DETTA PROJEKT";
+        badge.style.color = "var(--status-ok)";
+      } else if (mode === "calibrated" && checkRes.has_charuco_profile) {
+        badge.textContent = "LÅST CHARUCO-PROFIL (100% METRISK)";
+        badge.style.color = "var(--status-ok)";
+      } else {
+        badge.textContent = `FÖRVALD PROFIL (${mode})`;
+        badge.style.color = "var(--status-warn)";
+      }
+
+      const rows = [
+        { key: "cam1_left", name: "cam1_left" },
+        { key: "cam2_center", name: "cam2_center (ref)" },
+        { key: "cam3_right", name: "cam3_right" }
+      ];
+      tbody.innerHTML = rows.map(r => {
+        const c = calib[r.key] || {};
+        const px = c.pos_x_m !== undefined ? c.pos_x_m : (c.tx || 0.0);
+        const physYaw = c.phys_yaw !== undefined ? c.phys_yaw : -(c.yaw || 0.0);
+        const physTilt = c.phys_tilt !== undefined
+          ? c.phys_tilt
+          : (r.key === "cam2_center" ? 8.0 : 8.0 - (c.pitch || 0.0));
+        const physRoll = c.phys_roll !== undefined ? c.phys_roll : (c.roll || 0.0);
+        const relPitch = c.pitch || 0.0;
+
+        const tiltLabel = physTilt >= 0
+          ? `+${physTilt.toFixed(1)}° (upp)`
+          : `${physTilt.toFixed(1)}° (ned)`;
+
+        let rollStabTxt = `${physRoll >= 0 ? "+" : ""}${physRoll.toFixed(1)}°`;
+        if (r.key === "cam2_center") {
+          rollStabTxt = "0.0° (Ref)";
+        } else if (c.spread_deg !== undefined) {
+          rollStabTxt = `${physRoll >= 0 ? "+" : ""}${physRoll.toFixed(1)}° (±${Number(c.spread_deg).toFixed(1)}°)`;
+        }
+        return `
+          <tr>
+            <td style="font-weight: 600;">${r.name}</td>
+            <td>${px >= 0 ? "+" : ""}${px.toFixed(3)} m</td>
+            <td style="font-weight: 600; color: var(--text-main);">${physYaw >= 0 ? "+" : ""}${physYaw.toFixed(1)}°</td>
+            <td style="color: var(--status-ok); font-weight: 600;">${tiltLabel}</td>
+            <td>${relPitch >= 0 ? "+" : ""}${relPitch.toFixed(1)}°</td>
+            <td>${rollStabTxt}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function onRigModeChanged() {
+      appState.userChangedRigMode = true;
+      if (appState.lastCheckRes) {
+        renderCalibrationTable(appState.lastCheckRes);
+      }
+    }
+
+    function renderAudioSyncPanel(syncInfo) {
+      const badge = document.getElementById("syncStatusBadge");
+      const tbody = document.getElementById("syncTableBody");
+      const canvas = document.getElementById("audioSyncCanvas");
+      const ctx = canvas.getContext("2d");
+
+      ctx.fillStyle = "#0c0d0f";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (!syncInfo || !syncInfo.ok) {
+        badge.textContent = "Ej analyserad";
+        badge.style.color = "var(--text-muted)";
+        tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted);">Klicka på Analysera Ljudsynk för att detektera klappen.</td></tr>`;
+        return;
+      }
+
+      const clapSec = syncInfo.clap_peak_sec || 0;
+      const snr = syncInfo.clap_snr || 0;
+      badge.textContent = `Klapp @ ${clapSec.toFixed(2)}s (SNR ${snr}x)`;
+      badge.style.color = "var(--status-ok)";
+
+      const lags = syncInfo.lags_ms || {};
+      const rawOff = syncInfo.raw_frame_offsets || {};
+      const normOff = syncInfo.normalized_offsets || {};
+
+      const cams = [
+        { key: "cam1_left", label: "Cam 1 Vänster", color: "#58a6ff" },
+        { key: "cam2_center", label: "Cam 2 Mitten (Ref)", color: "#3fb950" },
+        { key: "cam3_right", label: "Cam 3 Höger", color: "#f0b72f" }
+      ];
+
+      tbody.innerHTML = cams.map(c => {
+        const ms = lags[c.key] || 0;
+        const rf = rawOff[c.key] || 0;
+        const nf = normOff[c.key] !== undefined ? normOff[c.key] : 0;
+        const msStr = c.key === "cam2_center" ? "0.0 ms (Ref)" : `${ms >= 0 ? "+" : ""}${ms.toFixed(1)} ms`;
+        const rfStr = `${rf >= 0 ? "+" : ""}${rf} rutor`;
+        return `
+          <tr>
+            <td style="color: ${c.color}; font-weight: 600;">${c.label}</td>
+            <td>${msStr}</td>
+            <td>${rfStr}</td>
+            <td>Ruta +${nf}</td>
+          </tr>
+        `;
+      }).join("");
+
+      // Rita de 3 ljudkurvorna + röd vertikal markör vid klappen
+      const envs = syncInfo.envelopes || {};
+      const dur = syncInfo.duration_analyzed_sec || 25.0;
+      const w = canvas.width;
+      const h = canvas.height;
+
+      // Tidsrutnät var 5:e sekund
+      ctx.strokeStyle = "#1c1f24";
+      ctx.lineWidth = 1;
+      for (let s = 5; s < dur; s += 5) {
+        const x = Math.round((s / dur) * w);
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+
+      cams.forEach(c => {
+        const arr = envs[c.key] || [];
+        if (!arr.length) return;
+        ctx.strokeStyle = c.color;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        for (let i = 0; i < arr.length; i++) {
+          const x = (i / (arr.length - 1)) * w;
+          const y = h - 3 - arr[i] * (h - 8);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      });
+
+      // Markera klappen
+      const clapX = Math.max(2, Math.min(w - 2, (clapSec / dur) * w));
+      ctx.strokeStyle = "#f85149";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(clapX, 0);
+      ctx.lineTo(clapX, h);
+      ctx.stroke();
+
+      ctx.fillStyle = "#f85149";
+      ctx.font = "10px Consolas, monospace";
+      ctx.fillText(`KLAPP ${clapSec.toFixed(2)}s`, Math.min(w - 75, clapX + 4), 11);
+    }
+
+    async function runFastAudioSync() {
+      const raw_dir = document.getElementById("rawDirInput").value;
+      const proj_dir = document.getElementById("projDirInput").value;
+      const fps = parseFloat(document.getElementById("fpsInput").value || "50");
+      document.getElementById("syncStatusBadge").textContent = "Analyserar ljud...";
+      const res = await callBackend("analyze_audio_sync", { raw_dir, proj_dir, fps });
+      if (res && res.ok) {
+        if (!appState.lastCheckRes) appState.lastCheckRes = {};
+        appState.lastCheckRes.sync_info = res;
+        renderAudioSyncPanel(res);
+        if (!appState.frames || appState.frames.length === 0) {
+          loadSyncedRawPreview(res.clap_peak_sec || 1.5);
+        }
+      } else if (res && res.error) {
+        alert(res.error);
+      }
+    }
+
+    function previewAtClapTime() {
+      const sync = appState.lastCheckRes && appState.lastCheckRes.sync_info;
+      const t = (sync && sync.clap_peak_sec) ? sync.clap_peak_sec : 1.5;
+      loadSyncedRawPreview(t);
+    }
+
+    function loadSyncedRawPreview(centerTimeSec) {
+      const checkRes = appState.lastCheckRes;
+      if (!checkRes || !checkRes.raw_paths) return;
+      const tRef = Math.max(0, parseFloat(centerTimeSec) || 0);
+      appState.rawPreviewTime = tRef;
+
+      const lags = (checkRes.sync_info && checkRes.sync_info.lags_ms) || {};
+      const slider = document.getElementById("frameSlider");
+      if (!appState.frames || appState.frames.length === 0) {
+        slider.disabled = false;
+        slider.min = 0;
+        slider.max = 60;
+        slider.step = 0.5;
+        slider.value = tRef;
+      }
+
+      document.getElementById("viewportHeaderTitle").textContent =
+        "Synkroniserad 3-Kameravy (Råvideo med Ljudsynks-offset — Kör Steg 2 för att spara JPG-trior)";
+      document.getElementById("frameReadout").textContent = `Synkad råvideo @ ${tRef.toFixed(2)} s`;
+
+      const cams = [
+        { id: "Cam1", hud: "hudStep2Cam1", key: "cam1_left", label: "CAM 1 LEFT" },
+        { id: "Cam2", hud: "hudStep2Cam2", key: "cam2_center", label: "CAM 2 CENTER (REF)" },
+        { id: "Cam3", hud: "hudStep2Cam3", key: "cam3_right", label: "CAM 3 RIGHT" }
+      ];
+
+      cams.forEach(c => {
+        const p = checkRes.raw_paths[c.key];
+        const lagMs = lags[c.key] || 0;
+        const camTime = Math.max(0, tRef + lagMs / 1000.0);
+        const img = document.getElementById("img" + c.id);
+        const empty = document.getElementById("empty" + c.id);
+        const hudEl = document.getElementById(c.hud);
+
+        if (p) {
+          hudEl.textContent = `${c.label} • t=${camTime.toFixed(3)}s (${lagMs >= 0 ? "+" : ""}${lagMs.toFixed(1)}ms)`;
+          img.src = `/video_preview?path=${encodeURIComponent(p)}&t=${camTime.toFixed(3)}`;
+          img.style.display = "block";
+          empty.style.display = "none";
+        } else {
+          img.style.display = "none";
+          empty.style.display = "block";
+        }
+      });
+    }
+
+    function onLutToggleChanged() {
+      const cb = document.getElementById("applyLutCheckbox");
+      const row = document.getElementById("lutPathRow");
+      if (row && cb) {
+        row.style.opacity = cb.checked ? "1" : "0.55";
+      }
+    }
+
+    async function browseLutFile() {
+      const inp = document.getElementById("lutPathInput");
+      const cur = inp ? inp.value.trim() : "";
+      const res = await callBackend("browse_file", {
+        initial_path: cur || appState.defaultLutPath || "",
+        title: "Välj 3D-LUT (.cube)",
+        filter_type: "lut"
+      });
+      if (res && res.ok && res.path && inp) {
+        inp.value = res.path;
+      }
+    }
+
+    function syncLutControlFromExif(raw_dir, res) {
+      const ci = (res && res.color_info) || {};
+      const cb = document.getElementById("applyLutCheckbox");
+      const badge = document.getElementById("lutExifBadge");
+      const lutInp = document.getElementById("lutPathInput");
+
+      if (res && res.default_lut_path) {
+        appState.defaultLutPath = res.default_lut_path;
+        if (lutInp && !lutInp.value.trim()) {
+          lutInp.value = res.default_lut_path;
+        }
+      }
+
+      if (badge) {
+        if (!ci.color_mode || ci.color_mode === "-") {
+          badge.className = "badge-neutral";
+          badge.textContent = "EXIF: -";
+        } else if (ci.is_dlog) {
+          badge.className = "badge-ok";
+          badge.textContent = "EXIF: " + ci.color_mode;
+        } else {
+          badge.className = "badge-neutral";
+          badge.textContent = "EXIF: " + ci.color_mode;
+        }
+      }
+
+      if (cb) {
+        const autoKey = `${raw_dir}::${ci.color_mode || "-"}`;
+        if (ci.color_mode && ci.color_mode !== "-" && appState.lastAutoLutKey !== autoKey) {
+          cb.checked = !!ci.is_dlog;
+          appState.lastAutoLutKey = autoKey;
+        }
+      }
+      onLutToggleChanged();
+    }
+
+    async function validatePaths() {
+      const raw_dir = document.getElementById("rawDirInput").value;
+      const proj_dir = document.getElementById("projDirInput").value;
+      const res = await callBackend("check_files", { raw_dir, proj_dir });
+      if (!res) return;
+      appState.lastCheckRes = res;
+      syncLutControlFromExif(raw_dir, res);
+
+      const rows = (res.files || []).map(f => `
+        <tr>
+          <td>raw/${f.name}</td>
+          <td style="color: ${f.exists ? 'var(--status-ok)' : 'var(--status-err)'}">
+            ${f.exists ? f.size_mb + ' MB' : 'SAKNAS'}
+          </td>
+        </tr>
+      `);
+      rows.push(`
+        <tr>
+          <td>processed/images (trior)</td>
+          <td style="color: ${res.n_triplets > 0 ? 'var(--status-ok)' : 'var(--text-muted)'}">
+            ${res.n_triplets > 0 ? res.n_triplets + ' trior (' + (res.n_triplets * 3) + ' jpg)' : '0 bilder (kör Steg 2)'}
+          </td>
+        </tr>
+      `);
+      rows.push(`
+        <tr>
+          <td>sparse/0/points3D.bin</td>
+          <td style="color: ${res.sfm_ready ? 'var(--status-ok)' : 'var(--text-muted)'}">
+            ${res.sfm_ready ? 'KLAR (3D-SfM)' : 'Ej genererad (kör Steg 3)'}
+          </td>
+        </tr>
+      `);
+      document.getElementById("fileCheckBody").innerHTML = rows.join("");
+
+      const rigSel = document.getElementById("rigModeSelect");
+      if (rigSel && res.has_charuco_profile && !appState.userChangedRigMode) {
+        rigSel.value = "calibrated";
+      }
+
+      renderAudioSyncPanel(res.sync_info);
+      renderCalibrationTable(res);
+
+      const btnSfm = document.getElementById("btnRunFull");
+      const btnMcp = document.getElementById("btnRunMcp");
+      if (btnSfm && btnMcp) {
+        if (res.sfm_ready) {
+          btnSfm.className = "btn";
+          btnSfm.style.borderColor = "var(--status-ok)";
+          btnMcp.className = "btn btn-success";
+          btnMcp.style.opacity = "1";
+          btnMcp.textContent = "Steg 4: Ladda i LichtFeld Studio & Starta 3DGUT";
+        } else {
+          btnSfm.className = res.n_triplets > 0 ? "btn btn-primary" : "btn";
+          btnSfm.style.borderColor = res.n_triplets > 0 ? "" : "var(--status-active)";
+          btnMcp.className = "btn";
+          btnMcp.style.opacity = "0.72";
+          btnMcp.textContent = "Steg 4: Ladda i LichtFeld Studio & Starta 3DGUT (Kör Steg 3 först)";
+        }
+      }
+
+      appState.frames = res.frames || [];
+      const slider = document.getElementById("frameSlider");
+      if (appState.frames.length > 0) {
+        document.getElementById("viewportHeaderTitle").textContent =
+          "Extraherade Synkroniserade Bild-trior (processed/images)";
+        slider.disabled = false;
+        slider.min = 0;
+        slider.max = appState.frames.length - 1;
+        slider.step = 1;
+        if (appState.currentFrameIdx >= appState.frames.length) appState.currentFrameIdx = 0;
+        slider.value = appState.currentFrameIdx;
+        document.getElementById("viewportInfoTxt").textContent =
+          `${appState.frames.length} synkade bild-trior (${appState.frames.length * 3} bilder)`;
+        loadTripletFrame(appState.currentFrameIdx);
+      } else if (res.all_mp4) {
+        document.getElementById("viewportInfoTxt").textContent =
+          "0 extraherade JPG • Visar synkad råvideo";
+        const defaultT = (res.sync_info && res.sync_info.clap_peak_sec)
+          ? Math.round((res.sync_info.clap_peak_sec + 3.0) * 10) / 10
+          : 4.0;
+        loadSyncedRawPreview(defaultT);
+      } else {
+        slider.disabled = true;
+        document.getElementById("viewportInfoTxt").textContent = "0 bild-trior";
+        ["Cam1", "Cam2", "Cam3"].forEach(id => {
+          document.getElementById("img" + id).style.display = "none";
+          document.getElementById("empty" + id).style.display = "block";
+        });
+      }
+    }
+
+    function loadTripletFrame(idx) {
+      if (!appState.frames.length) return;
+      idx = Math.max(0, Math.min(appState.frames.length - 1, parseInt(idx, 10)));
+      appState.currentFrameIdx = idx;
+      const fname = appState.frames[idx];
+      const proj_dir = encodeURIComponent(document.getElementById("projDirInput").value);
+      document.getElementById("frameReadout").textContent = `Trio ${idx + 1} / ${appState.frames.length} (${fname})`;
+
+      [
+        { id: "Cam1", hud: "hudStep2Cam1", label: "CAM 1 LEFT", cam: "cam1_left" },
+        { id: "Cam2", hud: "hudStep2Cam2", label: "CAM 2 CENTER (REF)", cam: "cam2_center" },
+        { id: "Cam3", hud: "hudStep2Cam3", label: "CAM 3 RIGHT", cam: "cam3_right" }
+      ].forEach(m => {
+        const img = document.getElementById("img" + m.id);
+        const empty = document.getElementById("empty" + m.id);
+        document.getElementById(m.hud).textContent = `${m.label} • ${fname}`;
+        img.src = `/frame?proj_dir=${proj_dir}&cam=${m.cam}&file=${encodeURIComponent(fname)}`;
+        img.style.display = "block";
+        empty.style.display = "none";
+      });
+    }
+
+    function onScrubFrame(val) {
+      if (appState.frames && appState.frames.length > 0) {
+        loadTripletFrame(parseInt(val, 10));
+      } else {
+        loadSyncedRawPreview(parseFloat(val));
+      }
+    }
+
+    function stepFrame(delta) {
+      if (appState.frames && appState.frames.length > 0) {
+        const next = Math.max(0, Math.min(appState.frames.length - 1, appState.currentFrameIdx + delta));
+        document.getElementById("frameSlider").value = next;
+        loadTripletFrame(next);
+      } else {
+        const cur = appState.rawPreviewTime || 4.0;
+        const nextT = Math.max(0, cur + delta * 0.5);
+        document.getElementById("frameSlider").value = nextT;
+        loadSyncedRawPreview(nextT);
+      }
+    }
+
+    function renderExtractProgress(es) {
+      const panel = document.getElementById("extractProgressPanel");
+      if (!es || (!es.active && !es.done && !es.error)) {
+        panel.style.display = "none";
+        return;
+      }
+      panel.style.display = "flex";
+      const titleEl = document.getElementById("extractHeaderTitle");
+      const etaEl = document.getElementById("extractEtaTxt");
+      const countsEl = document.getElementById("extractCountsTxt");
+      const sharpEl = document.getElementById("extractSharpnessTxt");
+      const barEl = document.getElementById("extractBarFill");
+
+      if (es.error) {
+        titleEl.textContent = `FEL: ${es.error}`;
+        titleEl.style.color = "var(--status-err)";
+        barEl.style.background = "var(--status-err)";
+        etaEl.textContent = "-";
+      } else if (es.done) {
+        const nTri = es.current_triplet || (appState.frames ? appState.frames.length : 0);
+        const nJpg = es.saved_images || (nTri * 3);
+        titleEl.textContent = `KLAR – ${nTri} bild-trior (${nJpg} JPG) extraherade`;
+        titleEl.style.color = "var(--status-ok)";
+        barEl.style.background = "var(--status-ok)";
+        etaEl.textContent = "100% Klar";
+      } else {
+        titleEl.textContent = es.phase || "ARBETAR...";
+        titleEl.style.color = "var(--status-active)";
+        barEl.style.background = "var(--status-active)";
+        etaEl.textContent = es.eta_sec > 0 ? `Kvar: ~${es.eta_sec} s` : "Beräknar...";
+      }
+
+      if (es.total_triplets > 0) {
+        countsEl.textContent = `Trio ${es.current_triplet} av ${es.total_triplets} (${es.pct}%) • ${es.saved_images} av ${es.total_images} bilder`;
+      } else if (es.done && appState.frames && appState.frames.length > 0) {
+        countsEl.textContent = `Alla ${appState.frames.length} bild-trior (${appState.frames.length * 3} bilder) redo i processed/images`;
+      } else {
+        countsEl.textContent = es.phase || "Förbereder...";
+      }
+      sharpEl.textContent = es.sharpness > 0 ? `Skärpa: ${es.sharpness.toFixed(1)}` : "";
+      barEl.style.width = `${es.pct || 0}%`;
+
+      // Om en ny bild-trio precis sparats på disk under pågående extraktion, visa den live!
+      if (es.active && es.frame_name && es.frame_name !== "-" && es.frame_name !== appState.lastLiveExtractedFrame) {
+        appState.lastLiveExtractedFrame = es.frame_name;
+        const proj_dir = encodeURIComponent(document.getElementById("projDirInput").value);
+        document.getElementById("viewportHeaderTitle").textContent =
+          "Live Bildextraktion pågår (processed/images)";
+        document.getElementById("viewportInfoTxt").textContent =
+          `Trio ${es.current_triplet} / ${es.total_triplets} (${es.saved_images} bilder sparade)`;
+        document.getElementById("frameReadout").textContent =
+          `Live: ${es.frame_name} (Skärpa ${es.sharpness.toFixed(1)})`;
+        [
+          { id: "Cam1", hud: "hudStep2Cam1", label: "CAM 1 LEFT", cam: "cam1_left" },
+          { id: "Cam2", hud: "hudStep2Cam2", label: "CAM 2 CENTER (REF)", cam: "cam2_center" },
+          { id: "Cam3", hud: "hudStep2Cam3", label: "CAM 3 RIGHT", cam: "cam3_right" }
+        ].forEach(m => {
+          const img = document.getElementById("img" + m.id);
+          const empty = document.getElementById("empty" + m.id);
+          document.getElementById(m.hud).textContent = `${m.label} • ${es.frame_name}`;
+          img.src = `/frame?proj_dir=${proj_dir}&cam=${m.cam}&file=${encodeURIComponent(es.frame_name)}`;
+          img.style.display = "block";
+          empty.style.display = "none";
+        });
+      }
+    }
+
+    async function browseDir(inputId) {
+      const current = document.getElementById(inputId).value;
+      const res = await callBackend("browse_directory", { initial_dir: current });
+      if (res && res.path) {
+        document.getElementById(inputId).value = res.path;
+        await validatePaths();
+      }
+    }
+
+    async function openFolder(which) {
+      let path = "";
+      if (which === "raw") {
+        path = (document.getElementById("rawDirInput")?.value || "").trim();
+      } else {
+        const projVal = (document.getElementById("projDirInput")?.value || "").trim();
+        const rawVal = (document.getElementById("rawDirInput")?.value || "").trim();
+        const onStep1 = document.getElementById("viewStep1")?.classList.contains("active");
+
+        if (onStep1) {
+          if (appState.selectedTake && appState.selectedTake.source === "sd" && !projVal) {
+            const firstCamPath = Object.values(appState.selectedTake.paths || {}).find(Boolean) || "";
+            if (firstCamPath) {
+              const lastSep = Math.max(firstCamPath.lastIndexOf("\\"), firstCamPath.lastIndexOf("/"));
+              path = lastSep > 0 ? firstCamPath.slice(0, lastSep) : "";
+            }
+            if (!path) path = appState.capturesRoot || "";
+          } else if (rawVal) {
+            const normRaw = rawVal.replace(/[\\/]+$/, "");
+            const lastSep = Math.max(normRaw.lastIndexOf("\\"), normRaw.lastIndexOf("/"));
+            const tail = lastSep >= 0 ? normRaw.slice(lastSep + 1).toLowerCase() : "";
+            path = (tail === "raw" && lastSep > 0) ? normRaw.slice(0, lastSep) : normRaw;
+          } else {
+            path = projVal || appState.capturesRoot || "";
+          }
+        } else {
+          path = projVal || rawVal || appState.capturesRoot || "";
+        }
+      }
+      const res = await callBackend("open_folder", { path });
+      if (res && res.ok === false && res.error) alert(res.error);
+    }
+
+    function renderSettingsStatusBadges(st) {
+      if (!st) return;
+      const pairs = [
+        ["stBadgeSpirula", !!st.spirula_ok, st.spirula_ok ? "OK (Hittad)" : "Saknas / Ogiltig"],
+        ["stBadgeLichtfeld", !!st.lichtfeld_ok, st.lichtfeld_ok ? "OK (Hittad)" : "Saknas / Ogiltig"],
+        ["stBadgeColmap", !!st.colmap_ok, st.colmap_ok ? "OK (Hittad)" : "Ej hittad (Valfri)"],
+        ["stBadgeCaptures", !!st.captures_root_ok, st.captures_root_ok ? "OK (Mapp finns)" : "Mapp saknas"]
+      ];
+      for (const [id, ok, label] of pairs) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        el.className = ok ? "badge-ok" : "badge-err";
+        el.textContent = label;
+      }
+      const dot = document.getElementById("enginePathsDot");
+      if (dot) {
+        dot.classList.toggle("ok", !!(st.spirula_ok && st.lichtfeld_ok && st.captures_root_ok));
+      }
+    }
+
+    function applySettingsToUi(st) {
+      if (!st) return;
+      appState.settings = st;
+      if (st.captures_root) {
+        appState.capturesRoot = st.captures_root;
+      }
+      const map = [
+        ["setSpirulaExe", st.spirula_exe || ""],
+        ["setLichtfeldExe", st.lichtfeld_exe || ""],
+        ["setColmapExe", st.colmap_exe || ""],
+        ["setCapturesRoot", st.captures_root || ""],
+        ["setMcpUrl", st.mcp_url || "http://127.0.0.1:45677/mcp"],
+        ["setExtractBackend", st.extract_backend || "auto"],
+        ["extractBackendSelect", st.extract_backend || "auto"]
+      ];
+      for (const [id, val] of map) {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      }
+      renderSettingsStatusBadges(st);
+    }
+
+    async function openSettingsModal() {
+      const modal = document.getElementById("settingsModal");
+      if (modal) modal.classList.add("open");
+      const fresh = await callBackend("get_settings");
+      if (fresh) {
+        applySettingsToUi(fresh);
+      } else if (appState.settings) {
+        applySettingsToUi(appState.settings);
+      }
+    }
+
+    function closeSettingsModal() {
+      const modal = document.getElementById("settingsModal");
+      if (modal) modal.classList.remove("open");
+    }
+
+    async function browseSettingFile(inputId, title) {
+      const inp = document.getElementById(inputId);
+      const res = await callBackend("browse_file", {
+        initial_path: inp ? inp.value : "",
+        title: title || "Välj programfil"
+      });
+      if (res && res.path && inp) {
+        inp.value = res.path;
+      }
+    }
+
+    async function browseSettingDir(inputId) {
+      const inp = document.getElementById(inputId);
+      const res = await callBackend("browse_directory", {
+        initial_dir: inp ? inp.value : ""
+      });
+      if (res && res.path && inp) {
+        inp.value = res.path;
+      }
+    }
+
+    async function autoDetectEngines() {
+      const detected = await callBackend("auto_detect_engines");
+      if (detected) {
+        applySettingsToUi(detected);
+      }
+    }
+
+    async function saveSettingsModal() {
+      const payload = {
+        spirula_exe: document.getElementById("setSpirulaExe").value.trim(),
+        lichtfeld_exe: document.getElementById("setLichtfeldExe").value.trim(),
+        colmap_exe: document.getElementById("setColmapExe").value.trim(),
+        captures_root: document.getElementById("setCapturesRoot").value.trim(),
+        mcp_url: document.getElementById("setMcpUrl").value.trim(),
+        extract_backend: document.getElementById("setExtractBackend").value
+      };
+      const res = await callBackend("save_settings", payload);
+      if (res && res.ok && res.settings) {
+        applySettingsToUi(res.settings);
+        closeSettingsModal();
+        await refreshAll();
+      } else if (res && res.error) {
+        alert("Kunde inte spara inställningar: " + res.error);
+      }
+    }
+
+    (async function upgradeHiResAppIcons() {
+      try {
+        const r = await fetch("/assets/icons/optigsrigg_192.png?v=3", { method: "HEAD", cache: "no-store" });
+        if (r && r.ok) {
+          const l192 = document.createElement("link");
+          l192.rel = "icon";
+          l192.type = "image/png";
+          l192.sizes = "192x192";
+          l192.href = "/assets/icons/optigsrigg_192.png?v=3";
+          document.head.appendChild(l192);
+        }
+      } catch (_e) {}
+    })();
+
+    async function createDesktopShortcut() {
+      const res = await callBackend("create_desktop_shortcut", {});
+      if (res && res.ok) {
+        alert("Skapade skrivbordsgenväg med OptiGSRigg-ikon:\n" + (res.shortcut_path || ""));
+      } else {
+        alert("Kunde inte skapa genväg: " + ((res && res.error) || "Okänt fel"));
+      }
+    }
+
+    document.addEventListener("keydown", (ev) => {
+      if (ev.key === "Escape") {
+        const modal = document.getElementById("settingsModal");
+        if (modal && modal.classList.contains("open")) {
+          closeSettingsModal();
+        }
+      }
+    });
+
+    async function openSpirulaGui() {
+      const proj_dir = document.getElementById("projDirInput").value;
+      const res = await callBackend("open_spirula_gui", { proj_dir });
+      if (res && res.ok === false && res.error) alert(res.error);
+    }
+
+    async function openLichtfeldGui() {
+      const proj_dir = document.getElementById("projDirInput").value;
+      const res = await callBackend("open_lichtfeld_gui", { proj_dir });
+      if (res && res.ok === false && res.error) alert(res.error);
+    }
+
+    async function runStep1SfM() {
+      await callBackend("run_step1_sfm", {
+        raw_dir: document.getElementById("rawDirInput").value,
+        proj_dir: document.getElementById("projDirInput").value,
+        baseline_mm: document.getElementById("baselineInput").value,
+        window_sec: document.getElementById("windowInput").value,
+        fps: document.getElementById("fpsInput").value,
+        mode: document.getElementById("rigModeSelect").value,
+        sfm_backend: document.getElementById("sfmBackendSelect").value,
+        extract_backend: document.getElementById("extractBackendSelect").value,
+        apply_lut: !!document.getElementById("applyLutCheckbox")?.checked,
+        lut_path: (document.getElementById("lutPathInput")?.value || "").trim()
+      });
+    }
+
+    async function runSyncOnly() {
+      await callBackend("run_sync_only", {
+        raw_dir: document.getElementById("rawDirInput").value,
+        proj_dir: document.getElementById("projDirInput").value,
+        baseline_mm: document.getElementById("baselineInput").value,
+        mode: document.getElementById("rigModeSelect").value,
+        window_sec: document.getElementById("windowInput").value,
+        fps: document.getElementById("fpsInput").value,
+        extract_backend: document.getElementById("extractBackendSelect").value,
+        apply_lut: !!document.getElementById("applyLutCheckbox")?.checked,
+        lut_path: (document.getElementById("lutPathInput")?.value || "").trim()
+      });
+    }
+
+    async function runCalibrateOnly() {
+      await callBackend("run_calibrate_only", {
+        proj_dir: document.getElementById("projDirInput").value,
+        baseline_mm: document.getElementById("baselineInput").value,
+        mode: document.getElementById("rigModeSelect").value
+      });
+    }
+
+    async function startLichtfeldTraining() {
+      const res = await callBackend("start_lichtfeld_training", {
+        proj_dir: document.getElementById("projDirInput").value
+      });
+      if (res && res.ok === false && res.error) alert(res.error);
+    }
+
+    async function stopProcess() {
+      await callBackend("stop_process", {});
+    }
+
+    function appendLogLine(line) {
+      ["terminalLog", "calTerminalLog"].forEach(id => {
+        const term = document.getElementById(id);
+        if (!term) return;
+        const div = document.createElement("div");
+        if (line.includes("[OK]") || line.includes("KLAR") || line.includes("GODKÄND")) div.className = "log-ok";
+        else if (line.includes("[VARNING]") || line.includes("[TIPS]")) div.className = "log-warn";
+        else if (line.includes("[FEL]") || line.includes("Error") || line.includes("Traceback")) div.className = "log-err";
+        else if (line.startsWith("===") || line.startsWith("---")) div.className = "log-hdr";
+        div.textContent = line;
+        term.appendChild(div);
+        term.scrollTop = term.scrollHeight;
+      });
+    }
+
+    function clearLogs() {
+      const t1 = document.getElementById("terminalLog");
+      const t2 = document.getElementById("calTerminalLog");
+      if (t1) t1.innerHTML = "";
+      if (t2) t2.innerHTML = "";
+    }
+
+    function copyLogs() {
+      navigator.clipboard.writeText(document.getElementById("terminalLog").innerText);
+    }
+
+    async function pollLiveStatus() {
+      try {
+        const st = await callBackend("poll_status", { since_index: appState.logIndex });
+        if (st) {
+          if (st.new_logs && st.new_logs.length > 0) {
+            st.new_logs.forEach(appendLogLine);
+            appState.logIndex = st.next_index;
+          }
+
+          const wasRunning = appState.isRunning;
+          appState.isRunning = st.is_running;
+          document.getElementById("btnStopProc").style.display = st.is_running ? "inline-flex" : "none";
+          document.getElementById("btnRunFull").disabled = st.is_running;
+          document.getElementById("btnRunSync").disabled = st.is_running;
+          const calStopBtn = document.getElementById("btnCalStopProc");
+          if (calStopBtn) calStopBtn.style.display = st.is_running ? "inline-flex" : "none";
+          ["btnCalRunSolve", "btnCalRunDemo", "btnCalRunVerify"].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = st.is_running;
+          });
+
+          document.getElementById("statusHeadline").textContent = st.status_title || "REDO";
+          document.getElementById("statusDetail").textContent = st.status_detail || "";
+          document.getElementById("statusLed").style.background =
+            st.is_running ? "var(--status-active)" : "var(--status-ok)";
+
+          const pct = st.progress || 0;
+          document.getElementById("progressBar").style.width = `${pct}%`;
+          document.getElementById("progressPctTxt").textContent = `${pct}%`;
+
+          if (st.copy_status) {
+            renderCopyProgress(st.copy_status);
+          }
+          if (st.extract_status) {
+            renderExtractProgress(st.extract_status);
+          }
+
+          const mcpBadge = document.getElementById("mcpBadgeTxt");
+          if (st.mcp && st.mcp.connected) {
+            const mcpHost = ((st.mcp.mcp_url || "").replace(/^https?:\/\//i, "").split("/")[0]) || "127.0.0.1:45677";
+            mcpBadge.textContent = `MCP Ansluten (${mcpHost})`;
+            mcpBadge.style.color = "var(--status-ok)";
+            document.getElementById("mcpStateCell").textContent = st.mcp.state;
+            document.getElementById("mcpIterCell").textContent = `${Number(st.mcp.iteration || 0).toLocaleString()} / ${Number(st.mcp.max_iterations || 30000).toLocaleString()}`;
+            document.getElementById("mcpLossCell").textContent = Number(st.mcp.loss || 0).toFixed(5);
+            document.getElementById("mcpSplatsCell").textContent = Number(st.mcp.splats || 0).toLocaleString();
+          } else {
+            mcpBadge.textContent = "MCP Frånkopplad";
+            mcpBadge.style.color = "var(--text-muted)";
+          }
+
+          if (wasRunning && !st.is_running) {
+            await refreshAll();
+            if (document.getElementById("viewPipeline").classList.contains("active")) {
+              await validatePaths();
+            }
+          }
+        }
+      } catch (e) {}
+      setTimeout(pollLiveStatus, 350);
+    }
+
+    async function refreshCharucoStatus() {
+      try {
+        const st = await callBackend("get_charuco_status", {});
+        if (!st || !st.ok) return;
+        appState.charucoStatus = st;
+        renderCharucoView(st);
+      } catch (e) {}
+    }
+
+    function onCalTakeSelected(rawDir) {
+      const inp = document.getElementById("calRawDirInput");
+      if (inp && rawDir) {
+        inp.value = rawDir;
+        inp.dataset.autoSynced = "0";
+      }
+    }
+
+    function setCalibPreviewMode(mode, fromUser = true) {
+      if (fromUser) appState.userPickedCalibMode = true;
+      appState.calibPreviewMode = mode;
+      ["Guide", "Reproj", "Coverage", "Epipolar", "Boards"].forEach(k => {
+        const el = document.getElementById("btnCalMode" + k);
+        if (el) el.classList.remove("active-toggle");
+      });
+      const mapBtn = { guide: "Guide", reproj: "Reproj", coverage: "Coverage", epipolar: "Epipolar", boards: "Boards" };
+      const activeEl = document.getElementById("btnCalMode" + (mapBtn[mode] || "Guide"));
+      if (activeEl) activeEl.classList.add("active-toggle");
+      const guidePanel = document.getElementById("calGuidePanel");
+      const prevGrid = document.getElementById("calPreviewGrid");
+      if (guidePanel) guidePanel.style.display = mode === "guide" ? "flex" : "none";
+      if (prevGrid) prevGrid.style.display = mode === "guide" ? "none" : "grid";
+      if (appState.charucoStatus) {
+        renderCharucoView(appState.charucoStatus);
+      }
+    }
+
+    function renderCharucoView(st) {
+      if (
+        !appState.userPickedCalibMode &&
+        appState.calibPreviewMode === "guide" &&
+        st.has_real_profile &&
+        st.previews &&
+        st.previews.reproj &&
+        st.previews.reproj.cam2_center
+      ) {
+        setCalibPreviewMode("reproj", false);
+        return;
+      }
+      const navPill = document.getElementById("calibNavPill");
+      const prof = st.profile;
+      if (navPill) {
+        if (st.has_real_profile && prof) {
+          navPill.textContent = `${prof.overall_status || "OK"} • ${prof.rms_px || "?"} px`;
+          navPill.style.background = prof.overall_status === "FAIL" ? "rgba(248,81,73,0.22)" : "rgba(63,185,80,0.22)";
+          navPill.style.color = prof.overall_status === "FAIL" ? "var(--status-err)" : "var(--status-ok)";
+        } else if (st.is_demo_profile && prof) {
+          navPill.textContent = `Demo • ${prof.rms_px || "?"} px`;
+          navPill.style.background = "rgba(210,153,34,0.22)";
+          navPill.style.color = "var(--status-warn)";
+        } else {
+          navPill.textContent = "Ej kalibrerad";
+          navPill.style.background = "rgba(255,255,255,0.08)";
+          navPill.style.color = "var(--text-muted)";
+        }
+      }
+
+      const bBadge = document.getElementById("calBoardsBadge");
+      const bTxt = document.getElementById("calBoardsStatusTxt");
+      if (bBadge) {
+        bBadge.textContent = st.boards_generated ? "3 tavlor klara" : "Ej genererade";
+        bBadge.style.color = st.boards_generated ? "var(--status-ok)" : "var(--text-muted)";
+      }
+      if (bTxt) {
+        bTxt.textContent = st.boards_generated
+          ? `Redo: ${st.kit_html}`
+          : "Klicka ovan för att generera 3 ChArUco-tavlor (.svg/.png) + A4-kit.";
+      }
+
+      const pBadge = document.getElementById("calProfileTypeBadge");
+      const pTxt = document.getElementById("calProfileSourceTxt");
+      if (prof) {
+        const isReal = !!st.has_real_profile;
+        if (pBadge) {
+          pBadge.textContent = isReal ? "SKARP PROFIL" : "SYNTETISK DEMO";
+          pBadge.style.color = isReal ? "var(--status-ok)" : "var(--status-warn)";
+        }
+        if (pTxt) {
+          const bLr = prof.baselines_mm ? prof.baselines_mm.left_to_right_mm : "-";
+          const sz = prof.image_size ? `${prof.image_size[0]}×${prof.image_size[1]}` : "-";
+          pTxt.innerHTML = isReal
+            ? `<strong style="color:var(--status-ok);">SKARP RIGG-PROFIL LADDDAD</strong> (${prof.created_at || "-"})<br/>Format: ${sz} • Baslinje C1–C3: <strong>${bLr} mm</strong> • RMS: ${prof.rms_px} px (Hold-out ${prof.holdout_rms_px} px)`
+            : `<strong style="color:var(--status-warn);">ENDAST DEMO-PROFIL</strong> (${prof.created_at || "-"}) — Skriver INTE över skarp profil.<br/>Format: ${sz} • Baslinje C1–C3: ${bLr} mm • RMS: ${prof.rms_px} px. Filma 3 ChArUco-tavlor för riktig profil!`;
+        }
+      } else {
+        if (pBadge) {
+          pBadge.textContent = "Saknas";
+          pBadge.style.color = "var(--text-muted)";
+        }
+        if (pTxt) pTxt.textContent = "Ingen ChArUco-kalibrering sparad ännu.";
+      }
+
+      // 5-Point Checks
+      const ovBadge = document.getElementById("calOverallBadge");
+      const chkBody = document.getElementById("calChecksBody");
+      if (prof && Array.isArray(prof.checks)) {
+        if (ovBadge) {
+          ovBadge.textContent = `TOTALT: ${prof.overall_status}`;
+          ovBadge.style.color = prof.overall_status === "OK" ? "var(--status-ok)" : (prof.overall_status === "FAIL" ? "var(--status-err)" : "var(--status-warn)");
+        }
+        if (chkBody) {
+          chkBody.innerHTML = prof.checks.map(c => {
+            const col = c.status === "OK" ? "var(--status-ok)" : (c.status === "FAIL" ? "var(--status-err)" : "var(--status-warn)");
+            return `
+              <tr title="${c.detail || ''}">
+                <td style="white-space:normal;">${c.title || c.id}</td>
+                <td style="font-weight:600;">${c.value || "-"}</td>
+                <td style="color:var(--text-dim);">${c.target || "-"}</td>
+                <td style="color:${col}; font-weight:700;">${c.status}</td>
+              </tr>
+            `;
+          }).join("");
+        }
+      }
+
+      // Per-camera Intrinsics & Rig Table
+      const bBadgeLr = document.getElementById("calBaselineBadge");
+      const metBody = document.getElementById("calMetricsBody");
+      if (prof && prof.per_camera) {
+        const bMm = prof.baselines_mm ? prof.baselines_mm.left_to_right_mm : "-";
+        if (bBadgeLr) bBadgeLr.textContent = `Baslinje L–R: ${bMm} mm`;
+        const cams = [
+          { key: "cam1_left", label: "Cam 1 Vänster" },
+          { key: "cam2_center", label: "Cam 2 Mitten" },
+          { key: "cam3_right", label: "Cam 3 Höger" }
+        ];
+        if (metBody) {
+          metBody.innerHTML = cams.map(cm => {
+            const pc = prof.per_camera[cm.key] || {};
+            const k = pc.intrinsics || [];
+            const fxFy = k.length >= 2 ? `${k[0].toFixed(1)} / ${k[1].toFixed(1)}` : "-";
+            const cxCyK = k.length >= 6 ? `${k[2].toFixed(0)},${k[3].toFixed(0)} (${k[4].toFixed(3)})` : "-";
+            const pm = pc.pos_mm || [0, 0, 0];
+            const posTxt = `${Number(pm[0]).toFixed(1)}, ${Number(pm[1]).toFixed(1)}, ${Number(pm[2]).toFixed(1)}`;
+            const angTxt = `${Number(pc.phys_yaw || 0).toFixed(1)}° / ${Number(pc.phys_tilt || 0).toFixed(1)}° / ${Number(pc.phys_roll || 0).toFixed(1)}°`;
+            const rmsTxt = pc.rms_px !== undefined ? `${Number(pc.rms_px).toFixed(3)} px` : "-";
+            return `
+              <tr>
+                <td style="font-weight:600;">${cm.label}</td>
+                <td>${fxFy}</td>
+                <td>${cxCyK}</td>
+                <td>${posTxt}</td>
+                <td style="color:var(--status-ok);">${angTxt}</td>
+                <td style="font-weight:600;">${rmsTxt}</td>
+              </tr>
+            `;
+          }).join("");
+        }
+      }
+
+      // Scene Pre-flight Verification Box
+      const vBadge = document.getElementById("calVerifyBadge");
+      const vBox = document.getElementById("calVerifyBox");
+      const sv = st.scene_verification;
+      if (sv) {
+        const stCol = sv.status === "OK" ? "var(--status-ok)" : (sv.status === "FAIL" ? "var(--status-err)" : "var(--status-warn)");
+        if (vBadge) {
+          vBadge.textContent = sv.status;
+          vBadge.style.color = stCol;
+        }
+        if (vBox) {
+          const ep = sv.epipolar_median_px || {};
+          vBox.innerHTML = `
+            <strong style="color:${stCol};">[${sv.status}] ${sv.checked_at || ""}</strong><br/>
+            ${sv.summary || ""}<br/>
+            Upplösning: ${sv.resolution_message || "-"} • Epipolärt medianfel C1: ${ep.cam1_left ?? "-"} px, C3: ${ep.cam3_right ?? "-"} px
+          `;
+        }
+      }
+
+      // 3-Cam Visual Previews
+      const mode = appState.calibPreviewMode || "guide";
+      const guidePanel = document.getElementById("calGuidePanel");
+      const prevGrid = document.getElementById("calPreviewGrid");
+      if (guidePanel) guidePanel.style.display = mode === "guide" ? "flex" : "none";
+      if (prevGrid) prevGrid.style.display = mode === "guide" ? "none" : "grid";
+      if (mode === "guide") return;
+      const slots = [
+        { idx: 1, cam: "cam1_left", board: "board_0_left", label: "CAM 1 VÄNSTER" },
+        { idx: 2, cam: "cam2_center", board: "board_1_center", label: "CAM 2 MITTEN (REF)" },
+        { idx: 3, cam: "cam3_right", board: "board_2_right", label: "CAM 3 HÖGER" }
+      ];
+      const ts = Date.now();
+      slots.forEach(s => {
+        const img = document.getElementById(`calImgCam${s.idx}`);
+        const emp = document.getElementById(`calEmptyCam${s.idx}`);
+        const hud = document.getElementById(`calHudCam${s.idx}`);
+        let available = false;
+        let url = "";
+        let hudTxt = s.label;
+        if (mode === "boards") {
+          available = !!st.boards_generated;
+          url = `/calib_board?board=${s.board}&t=${ts}`;
+          hudTxt = `${s.board.toUpperCase()} (Unika ArUco-ID)`;
+        } else {
+          const mapP = (st.previews && st.previews[mode]) || {};
+          available = !!mapP[s.cam];
+          url = `/calib_preview?kind=${mode}&cam=${s.cam}&t=${ts}`;
+          hudTxt = `${s.label} • ${mode.toUpperCase()}`;
+        }
+        if (hud) hud.textContent = hudTxt;
+        if (available && img && emp) {
+          img.src = url;
+          img.style.display = "block";
+          emp.style.display = "none";
+        } else if (img && emp) {
+          img.style.display = "none";
+          emp.style.display = "block";
+          emp.textContent = mode === "epipolar"
+            ? `Kör '3. Kontrollera Rigg på Aktiv Scen' för ${s.label}`
+            : `Ingen ${mode}-bild ännu — kör ChArUco-kalibrering först`;
+        }
+      });
+    }
+
+    async function generateBoardsAction(openKit) {
+      const res = await callBackend("generate_charuco_boards", { open_kit: !!openKit });
+      if (res && res.ok) {
+        appState.charucoStatus = res;
+        renderCharucoView(res);
+      } else if (res && res.error) {
+        alert(res.error);
+      }
+    }
+
+    async function browseCalRawDir() {
+      const cur = (document.getElementById("calRawDirInput").value || "").trim();
+      const res = await callBackend("browse_directory", { initial_dir: cur });
+      if (res && res.path) {
+        const el = document.getElementById("calRawDirInput");
+        el.value = res.path;
+        el.dataset.autoSynced = "0";
+      }
+    }
+
+    async function runCharucoCalibAction(isDemo) {
+      const rawDir = (document.getElementById("calRawDirInput").value || document.getElementById("rawDirInput").value || "").trim();
+      const rulerMm = parseFloat(document.getElementById("calRulerInput").value || "100.0") || 100.0;
+      const fpsVal = parseFloat(document.getElementById("calFpsInput").value || "50.0") || 50.0;
+      const res = await callBackend("run_charuco_calibration", {
+        calib_mode: isDemo ? "demo" : "videos",
+        raw_dir: rawDir,
+        ruler_100mm: rulerMm,
+        fps: fpsVal,
+        use_audio_sync: true
+      });
+      if (res && !res.ok && res.error) {
+        alert(res.error);
+      }
+    }
+
+    async function runSceneVerifyAction() {
+      const projDir = (document.getElementById("projDirInput").value || "").trim();
+      const rawDir = (document.getElementById("rawDirInput").value || document.getElementById("calRawDirInput").value || "").trim();
+      const res = await callBackend("run_verify_calibration", {
+        proj_dir: projDir,
+        raw_dir: rawDir,
+        allow_demo: true
+      });
+      if (res && !res.ok && res.error) {
+        alert(res.error);
+      } else if (res && res.ok) {
+        setCalibPreviewMode("epipolar");
+      }
+    }
+
+    async function openCalibDocAction(kind) {
+      const res = await callBackend("open_calib_doc", { kind });
+      if (res && !res.ok && res.error) {
+        alert(res.error);
+      }
+    }
+
+    function setupPressAndHold100Zoom() {
+      let activeZoom = null;
+
+      function applyZoomAt(state, clientX, clientY) {
+        const { container, img, hud, origHudText, fitRect } = state;
+        const natW = img.naturalWidth;
+        const natH = img.naturalHeight;
+        if (!natW || !natH) return;
+
+        const boxRect = container.getBoundingClientRect();
+        // Beräkna vilken punkt (u, v) i [0..1] på den anpassade bilden som användaren pekade på
+        const u = Math.max(0, Math.min(1, (clientX - fitRect.left) / Math.max(1, fitRect.width)));
+        const v = Math.max(0, Math.min(1, (clientY - fitRect.top) / Math.max(1, fitRect.height)));
+
+        const pxX = Math.round(u * natW);
+        const pxY = Math.round(v * natH);
+
+        // Placera den klickade bildpunkten (pxX, pxY) exakt i mitten av vy-rutan (boxRect.width/2, boxRect.height/2)
+        const leftPx = Math.round((boxRect.width / 2) - pxX);
+        const topPx = Math.round((boxRect.height / 2) - pxY);
+
+        img.style.position = "absolute";
+        img.style.maxWidth = "none";
+        img.style.maxHeight = "none";
+        img.style.width = `${natW}px`;
+        img.style.height = `${natH}px`;
+        img.style.left = `${leftPx}px`;
+        img.style.top = `${topPx}px`;
+        container.style.cursor = "crosshair";
+
+        if (hud) {
+          hud.textContent = `${origHudText}  [100% 1:1 • ${natW}×${natH} px • X:${pxX} Y:${pxY}]`;
+          hud.style.borderColor = "var(--status-active)";
+          hud.style.color = "#58a6ff";
+        }
+      }
+
+      function endZoom() {
+        if (!activeZoom) return;
+        const { container, img, hud, origHudText } = activeZoom;
+        img.style.position = "";
+        img.style.maxWidth = "";
+        img.style.maxHeight = "";
+        img.style.width = "";
+        img.style.height = "";
+        img.style.left = "";
+        img.style.top = "";
+        container.style.cursor = "zoom-in";
+        if (hud) {
+          hud.textContent = origHudText;
+          hud.style.borderColor = "";
+          hud.style.color = "";
+        }
+        activeZoom = null;
+      }
+
+      const containers = document.querySelectorAll(".cam-view, .preview-single-wrap, .triple-cell");
+      containers.forEach(container => {
+        const img = container.querySelector("img");
+        if (!img) return;
+        img.draggable = false;
+
+        container.addEventListener("mousedown", (e) => {
+          if (e.button !== 0) return;
+          if (img.style.display === "none" || !img.naturalWidth) return;
+          e.preventDefault();
+
+          const hud = container.querySelector(".hud-overlay");
+          const fitRect = img.getBoundingClientRect();
+          activeZoom = {
+            container,
+            img,
+            hud,
+            origHudText: hud ? hud.textContent : "",
+            fitRect
+          };
+          applyZoomAt(activeZoom, e.clientX, e.clientY);
+        });
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!activeZoom) return;
+        applyZoomAt(activeZoom, e.clientX, e.clientY);
+      });
+
+      window.addEventListener("mouseup", () => {
+        if (activeZoom) endZoom();
+      });
+
+      window.addEventListener("blur", () => {
+        if (activeZoom) endZoom();
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      setupPressAndHold100Zoom();
+      await refreshAll();
+      pollLiveStatus();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# Python-miljöer och kompilerad bytecode
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Lokala datorspecifika inställningar, runtime-state och webbläsarprofil
+config/app_window_profile/
+config/settings.json
+config/.running_instance.json
+config/last_*.log
+config/calib_preview/
+config/dji_rig_profile_demo.json
+
+# Lokala Windows-genvägar och OS-skräpfiler
+*.lnk
+.DS_Store
+Thumbs.db
+Desktop.ini
