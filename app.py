@@ -377,6 +377,7 @@ def scan_sd_cards() -> dict:
                             "name": p.name,
                             "path": str(p),
                             "size_mb": round(st.st_size / (1024 * 1024), 1),
+                            "mtime": float(st.st_mtime),
                             "mtime_str": datetime.datetime.fromtimestamp(st.st_mtime).strftime("%Y-%m-%d %H:%M:%S"),
                         }
                     )
@@ -399,6 +400,387 @@ def scan_sd_cards() -> dict:
             }
     status["_unmarked_dcim"] = unmarked_dcim
     return status
+
+
+def _enrich_sd_status_disk_usage(sd_status: dict) -> dict:
+    """Fyller på diskutrymme (GB) och total klippstorlek (MB) för anslutna SD-kort."""
+    for cam_key in ("cam1_left", "cam2_center", "cam3_right"):
+        cam_info = sd_status.get(cam_key)
+        if cam_info and cam_info.get("connected") and cam_info.get("drive"):
+            try:
+                usage = shutil.disk_usage(cam_info["drive"])
+                cam_info["free_gb"] = round(usage.free / (1024**3), 1)
+                cam_info["total_gb"] = round(usage.total / (1024**3), 1)
+            except Exception:
+                cam_info["free_gb"] = 0.0
+                cam_info["total_gb"] = 0.0
+            cam_info["clips_total_mb"] = round(sum(c.get("size_mb", 0) for c in cam_info.get("clips", [])), 1)
+    return sd_status
+
+
+def build_calibration_sd_candidates(
+    sd_status: dict,
+    captures_root: Path | None = None,
+    max_probe_candidates: int = 6,
+) -> dict:
+    """
+    Analyserar anslutna SD-kort/kameror via .id-filer, parar ihop troliga
+    kalibreringstagningar (tidsstämpel + fallback för osynkade kameraklockor),
+    berikar toppkandidater med FFprobe/EXIF-metadata och poängsätter lämplighet
+    för ChArUco-riggkalibrering.
+    """
+    cam_order = ("cam1_left", "cam2_center", "cam3_right")
+    cam_labels = {
+        "cam1_left": "Cam 1 Vänster",
+        "cam2_center": "Cam 2 Mitten",
+        "cam3_right": "Cam 3 Höger",
+    }
+    default_ids = {
+        "cam1_left": "CAM0_LEFT.id",
+        "cam2_center": "CAM1_MID.id",
+        "cam3_right": "CAM2_RIGHT.id",
+    }
+
+    cameras: dict = {}
+    clips_by_cam: dict[str, list[dict]] = {}
+    connected_count = 0
+
+    for ck in cam_order:
+        raw_cam = dict(sd_status.get(ck) or {})
+        is_conn = bool(raw_cam.get("connected"))
+        if is_conn:
+            connected_count += 1
+        raw_clips = list(raw_cam.get("clips") or [])
+        norm_clips = []
+        for idx, c in enumerate(raw_clips):
+            mt = c.get("mtime")
+            if mt is None and c.get("path"):
+                try:
+                    mt = float(Path(c["path"]).stat().st_mtime)
+                except OSError:
+                    mt = 0.0
+            norm_clips.append(
+                {
+                    "name": c.get("name") or Path(c.get("path") or f"clip_{idx}").name,
+                    "path": str(c.get("path") or ""),
+                    "size_mb": float(c.get("size_mb") or 0.0),
+                    "mtime_str": str(c.get("mtime_str") or "-"),
+                    "mtime": float(mt or 0.0),
+                    **{k: v for k, v in c.items() if k not in ("name", "path", "size_mb", "mtime_str", "mtime")},
+                }
+            )
+        if norm_clips and any(c["mtime"] > 0.0 for c in norm_clips):
+            norm_clips.sort(key=lambda c: c["mtime"], reverse=True)
+        clips_by_cam[ck] = norm_clips
+        cameras[ck] = {
+            "label": cam_labels[ck],
+            "connected": is_conn,
+            "drive": raw_cam.get("drive"),
+            "id_file": raw_cam.get("id_file") or default_ids[ck],
+            "clip_count": len(norm_clips),
+            "free_gb": float(raw_cam.get("free_gb") or 0.0),
+            "total_gb": float(raw_cam.get("total_gb") or 0.0),
+            "clips_total_mb": float(
+                raw_cam.get("clips_total_mb")
+                if raw_cam.get("clips_total_mb") is not None
+                else round(sum(c["size_mb"] for c in norm_clips), 1)
+            ),
+            "clips": norm_clips,
+        }
+
+    cams_with_clips = [ck for ck in cam_order if clips_by_cam[ck]]
+    raw_groups: list[dict[str, dict]] = []
+
+    if len(cams_with_clips) >= 2:
+        max_per_cam = 60
+        work_clips = {ck: clips_by_cam[ck][:max_per_cam] for ck in cams_with_clips}
+        all_have_mtime = all(cl["mtime"] > 0.0 for ck in cams_with_clips for cl in work_clips[ck])
+        edges: list[tuple[float, float, str, int, str, int]] = []
+        if all_have_mtime:
+            for idx_a in range(len(cams_with_clips)):
+                ck_a = cams_with_clips[idx_a]
+                for idx_b in range(idx_a + 1, len(cams_with_clips)):
+                    ck_b = cams_with_clips[idx_b]
+                    for ia, ca in enumerate(work_clips[ck_a]):
+                        ta, sa = ca["mtime"], ca["size_mb"]
+                        for ib, cb in enumerate(work_clips[ck_b]):
+                            dt = abs(ta - cb["mtime"])
+                            if dt <= 120.0:
+                                edges.append((dt, abs(sa - cb["size_mb"]), ck_a, ia, ck_b, ib))
+
+        if edges:
+            pairing_mode = "timestamp"
+            clusters: dict[tuple[str, int], dict[str, tuple[int, dict]]] = {}
+            node_to_cid: dict[tuple[str, int], tuple[str, int]] = {}
+            for ck in cams_with_clips:
+                for i, cl in enumerate(work_clips[ck]):
+                    nid = (ck, i)
+                    clusters[nid] = {ck: (i, cl)}
+                    node_to_cid[nid] = nid
+
+            edges.sort(key=lambda e: (e[0], e[1]))
+            for _dt, _ds, ck_a, ia, ck_b, ib in edges:
+                cid_a = node_to_cid[(ck_a, ia)]
+                cid_b = node_to_cid[(ck_b, ib)]
+                if cid_a == cid_b:
+                    continue
+                grp_a = clusters[cid_a]
+                grp_b = clusters[cid_b]
+                if set(grp_a.keys()) & set(grp_b.keys()):
+                    continue
+                merged_times = [v[1]["mtime"] for v in grp_a.values()] + [v[1]["mtime"] for v in grp_b.values()]
+                if (max(merged_times) - min(merged_times)) > 120.0:
+                    continue
+                grp_a.update(grp_b)
+                for m_ck, (m_idx, _m_cl) in grp_b.items():
+                    node_to_cid[(m_ck, m_idx)] = cid_a
+                del clusters[cid_b]
+
+            ordered_clusters = sorted(
+                clusters.values(),
+                key=lambda grp: max(v[1]["mtime"] for v in grp.values()),
+                reverse=True,
+            )[:12]
+            raw_groups = [{ck: pair[1] for ck, pair in grp.items()} for grp in ordered_clusters]
+        else:
+            pairing_mode = "newest_index"
+            max_len = min(12, max(len(clips_by_cam[ck]) for ck in cams_with_clips))
+            for idx in range(max_len):
+                grp = {ck: clips_by_cam[ck][idx] for ck in cams_with_clips if idx < len(clips_by_cam[ck])}
+                if grp:
+                    raw_groups.append(grp)
+    elif len(cams_with_clips) == 1:
+        pairing_mode = "single_card"
+        only_ck = cams_with_clips[0]
+        for clip in clips_by_cam[only_ck][:12]:
+            raw_groups.append({only_ck: clip})
+    else:
+        pairing_mode = "none"
+
+    # Skanna befintliga sessioner under captures_root för 1-kort-i-taget-flödet
+    existing_sessions_map: dict[str, dict] = {}
+    partial_candidates: list[tuple[float, dict]] = []
+    if captures_root and Path(captures_root).exists():
+        try:
+            for d in Path(captures_root).iterdir():
+                if not d.is_dir() or d.name.startswith("."):
+                    continue
+                raw_d = d / "raw"
+                if not raw_d.exists():
+                    continue
+                present = {ck: (raw_d / f"{ck}.mp4").is_file() for ck in cam_order}
+                mp4_cnt = sum(1 for v in present.values() if v)
+                sess_info = {
+                    "name": d.name,
+                    "raw_dir": str(raw_d),
+                    "mp4_count": mp4_cnt,
+                    "present": present,
+                }
+                existing_sessions_map[d.name] = sess_info
+                if 1 <= mp4_cnt < 3 and ("calib" in d.name.lower() or "kalib" in d.name.lower()):
+                    try:
+                        mt_dir = raw_d.stat().st_mtime
+                    except OSError:
+                        mt_dir = 0.0
+                    partial_candidates.append((mt_dir, sess_info))
+        except OSError:
+            pass
+    partial_candidates.sort(key=lambda x: x[0], reverse=True)
+    partial_calib_session = partial_candidates[0][1] if partial_candidates else None
+
+    candidates: list[dict] = []
+    for rank, group in enumerate(raw_groups):
+        ref_clip = group.get("cam2_center") or group.get("cam1_left") or group.get("cam3_right")
+        paths = {ck: (group[ck]["path"] if ck in group else "") for ck in cam_order}
+        cams_present = len(group)
+        total_mb = round(sum(float(c.get("size_mb") or 0.0) for c in group.values()), 1)
+
+        probed_metas: dict[str, dict] = {}
+        if rank < max_probe_candidates:
+            for ck, clip in group.items():
+                p_str = clip.get("path") or ""
+                if p_str:
+                    m = dict(probe_video_metadata(Path(p_str)))
+                    # Tillåt ev. redan berikad test-metadata om ffprobe inte körts på dummyfil
+                    if (m.get("duration_sec", 0.0) <= 0.0 or m.get("probe_error")) and clip.get("duration_sec"):
+                        for mk in (
+                            "duration_sec",
+                            "duration_str",
+                            "fps",
+                            "effective_width",
+                            "effective_height",
+                            "aspect_ratio",
+                            "color_mode",
+                            "is_dlog",
+                            "bit_depth",
+                            "audio_channels",
+                        ):
+                            if mk in clip:
+                                m[mk] = clip[mk]
+                        m.pop("probe_error", None)
+                        if m.get("codec", "-") == "-":
+                            m["codec"] = "HEVC"
+                        if "audio_channels" not in clip and m.get("audio_channels", 0) == 0:
+                            m["audio_channels"] = 2
+                    probed_metas[ck] = m
+
+        valid_metas = [
+            m for m in probed_metas.values() if m.get("exists") and not m.get("probe_error") and m.get("codec", "-") != "-"
+        ]
+        durations = [float(m["duration_sec"]) for m in valid_metas if float(m.get("duration_sec") or 0.0) > 0.0]
+        avg_dur = round(sum(durations) / len(durations), 1) if durations else 0.0
+        dur_spread = round(max(durations) - min(durations), 1) if len(durations) >= 2 else 0.0
+
+        fps_vals = [float(m["fps"]) for m in valid_metas if float(m.get("fps") or 0.0) > 0.0]
+        fps_match = len({round(f, 2) for f in fps_vals}) <= 1 if fps_vals else True
+        rep_fps = round(fps_vals[0], 2) if fps_vals else 0.0
+
+        res_vals = [
+            f"{m['effective_width']}×{m['effective_height']}"
+            for m in valid_metas
+            if int(m.get("effective_width") or 0) > 0 and int(m.get("effective_height") or 0) > 0
+        ]
+        res_match = len(set(res_vals)) <= 1 if res_vals else True
+        rep_res = res_vals[0] if res_vals else "-"
+        rep_aspect = next((m["aspect_ratio"] for m in valid_metas if m.get("aspect_ratio") and m["aspect_ratio"] != "-"), "-")
+
+        color_modes = [m["color_mode"] for m in valid_metas if m.get("color_mode") and m["color_mode"] != "-"]
+        color_mode = color_modes[0] if color_modes else "-"
+        is_dlog = any(bool(m.get("is_dlog")) for m in valid_metas)
+        audio_missing = any(int(m.get("audio_channels") or 0) == 0 for m in valid_metas)
+
+        warnings: list[str] = []
+        if cams_present < 3:
+            warnings.append(
+                f"Endast {cams_present}/3 kameror anslutna — du kan importera nu och fylla på nästa kamerakort i samma mapp."
+            )
+        if not res_match:
+            warnings.append("VARNING: Olika upplösning/bildförhållande mellan kamerorna!")
+        if not fps_match:
+            warnings.append("VARNING: Olika bildfrekvens (FPS) mellan kamerorna!")
+        if dur_spread > 8.0:
+            warnings.append(f"Klippens längd skiljer sig {dur_spread:.1f} s mellan kamerorna.")
+        if audio_missing:
+            warnings.append("VARNING: Minst en kamera saknar ljudspår (klapp-synk kräver ljud).")
+        if pairing_mode == "newest_index":
+            warnings.append(
+                "Kameraklockorna skiljer sig >3 min — filerna parade i ordning (senaste först). Kontrollera att rätt fil valts."
+            )
+
+        score = {3: 45, 2: 22, 1: 10}.get(cams_present, 0)
+        score += 28 if rank == 0 else (16 if rank == 1 else (8 if rank == 2 else 0))
+        if avg_dur > 0.0:
+            if 20.0 <= avg_dur <= 150.0:
+                score += 25
+            elif (10.0 <= avg_dur < 20.0) or (150.0 < avg_dur <= 300.0):
+                score += 10
+            else:
+                score -= 20
+        if valid_metas and res_match and fps_match:
+            score += 10
+        if len(durations) >= 2 and dur_spread <= 8.0:
+            score += 10
+        if not res_match:
+            score -= 25
+        if not fps_match:
+            score -= 15
+        if audio_missing:
+            score -= 15
+
+        mtime_str = str(ref_clip.get("mtime_str") or "-") if ref_clip else "-"
+        clean_dt = mtime_str.replace("-", "").replace(":", "").replace(" ", "_")[:13]
+        if len(clean_dt) < 8:
+            clean_dt = time.strftime("%Y%m%d_%H%M")
+        suggested_name = f"Calib_Rig_{clean_dt}"
+
+        dur_txt = f"{avg_dur:.0f} s" if avg_dur > 0.0 else "-"
+        fps_txt = f"{rep_fps:g} fps" if rep_fps > 0.0 else "-"
+        ref_name = str(ref_clip.get("name") or f"Take_{rank + 1}") if ref_clip else f"Take_{rank + 1}"
+
+        reason_parts = [f"{cams_present}/3 kameror"]
+        if avg_dur > 0.0:
+            reason_parts.append(f"längd {dur_txt}")
+        if rep_res != "-":
+            reason_parts.append(f"{rep_res} ({rep_aspect})")
+        if rep_fps > 0.0:
+            reason_parts.append(fps_txt)
+        if color_mode != "-":
+            reason_parts.append(color_mode)
+        if rank == 0:
+            reason_parts.append("senaste tagningen")
+
+        candidates.append(
+            {
+                "id": f"cal_sd_{rank + 1}",
+                "rank": rank,
+                "score": score,
+                "recommended": False,
+                "name": ref_name,
+                "mtime_str": mtime_str,
+                "cams_present": cams_present,
+                "total_mb": total_mb,
+                "duration_sec": avg_dur,
+                "duration_str": dur_txt,
+                "duration_spread_sec": dur_spread,
+                "resolution": rep_res,
+                "aspect_ratio": rep_aspect,
+                "fps": rep_fps,
+                "color_mode": color_mode,
+                "is_dlog": is_dlog,
+                "res_match": res_match,
+                "fps_match": fps_match,
+                "audio_ok": not audio_missing,
+                "warnings": warnings,
+                "reason": " • ".join(reason_parts),
+                "suggested_project_name": suggested_name,
+                "paths": paths,
+                "files": {
+                    ck: {
+                        "name": group[ck]["name"],
+                        "path": group[ck]["path"],
+                        "size_mb": group[ck]["size_mb"],
+                        "mtime_str": group[ck]["mtime_str"],
+                        "duration_sec": round(float(probed_metas.get(ck, {}).get("duration_sec") or 0.0), 1),
+                        "fps": float(probed_metas.get(ck, {}).get("fps") or 0.0),
+                        "color_mode": probed_metas.get(ck, {}).get("color_mode") or "-",
+                    }
+                    for ck in cam_order
+                    if ck in group
+                },
+            }
+        )
+
+    candidates.sort(key=lambda c: (-c["score"], c["rank"]))
+    for idx, cand in enumerate(candidates):
+        cand["recommended"] = idx == 0
+        prefix = "★ FÖRSLAG: " if idx == 0 else f"#{idx + 1}: "
+        meta_bits = [f"{cand['cams_present']}/3 kam"]
+        if cand["duration_sec"] > 0:
+            meta_bits.append(cand["duration_str"])
+        if cand["resolution"] != "-":
+            meta_bits.append(cand["resolution"])
+        if cand["fps"] > 0:
+            meta_bits.append(f"{cand['fps']:g} fps")
+        if cand["color_mode"] != "-":
+            meta_bits.append(cand["color_mode"])
+        cand["label"] = f"{prefix}{cand['name']} ({' • '.join(meta_bits)}) • {cand['mtime_str']}"
+
+    rec_cand = candidates[0] if candidates else None
+    return {
+        "connected_count": connected_count,
+        "cameras": cameras,
+        "unmarked_dcim": list(sd_status.get("_unmarked_dcim") or []),
+        "pairing_mode": pairing_mode,
+        "candidates": candidates,
+        "recommended_id": rec_cand["id"] if rec_cand else None,
+        "suggested_project_name": (
+            partial_calib_session["name"]
+            if partial_calib_session
+            else (rec_cand["suggested_project_name"] if rec_cand else f"Calib_Rig_{time.strftime('%Y%m%d_%H%M')}")
+        ),
+        "partial_calib_session": partial_calib_session,
+        "existing_sessions_map": existing_sessions_map,
+    }
 
 
 def get_python_executable() -> str:
@@ -1116,17 +1498,7 @@ class RigStudioBackend:
                 self._append_log(f"[VARNING] SD-kortsskanning misslyckades: {e}")
 
         # Berika SD-status med diskutrymme (ledigt / totalt i GB) och total klippstorlek
-        for cam_key in ("cam1_left", "cam2_center", "cam3_right"):
-            cam_info = sd_status.get(cam_key)
-            if cam_info and cam_info.get("connected") and cam_info.get("drive"):
-                try:
-                    usage = shutil.disk_usage(cam_info["drive"])
-                    cam_info["free_gb"] = round(usage.free / (1024**3), 1)
-                    cam_info["total_gb"] = round(usage.total / (1024**3), 1)
-                except Exception:
-                    cam_info["free_gb"] = 0.0
-                    cam_info["total_gb"] = 0.0
-                cam_info["clips_total_mb"] = round(sum(c.get("size_mb", 0) for c in cam_info.get("clips", [])), 1)
+        _enrich_sd_status_disk_usage(sd_status)
 
         # Bygg lista med tagningar på inkopplade SD-kort (parade över alla 3 kameror)
         sd_takes = []
@@ -1322,6 +1694,8 @@ class RigStudioBackend:
         safe_name: str,
         target_raw_dir: Path,
         target_proj_dir: Path,
+        on_complete=None,
+        copy_context: str = "step1",
     ):
         """
         Kopierar videofiler i 4 MB-block med realtidstelemetri (MB kopierat av totalt,
@@ -1358,6 +1732,7 @@ class RigStudioBackend:
                 "active": True,
                 "done": False,
                 "error": None,
+                "context": copy_context,
                 "project_name": safe_name,
                 "raw_dir": str(target_raw_dir),
                 "proj_dir": str(target_proj_dir),
@@ -1495,6 +1870,11 @@ class RigStudioBackend:
                 self._append_log(
                     f"[OK] === KOPIERING KLAR: {total_mb} MB till {target_raw_dir} ({avg_speed} MB/s) ==="
                 )
+                if callable(on_complete):
+                    try:
+                        on_complete()
+                    except Exception as cb_err:
+                        self._append_log(f"[FEL] Efterföljande åtgärd efter kopiering misslyckades: {cb_err}")
 
             except Exception as e:
                 # Städa bort ev. halvfärdig .part-fil
@@ -2925,6 +3305,166 @@ class RigStudioBackend:
                 self._append_log(f"[VARNING] [ChArUco] Kunde inte öppna webbläsare för A4-kit: {e}")
         return {"ok": True, "generated": res, **self.get_charuco_status()}
 
+    def scan_calibration_sd_candidates(self, _payload: dict = None) -> dict:
+        """Skannar anslutna kameror/SD-kort via .id-filer och föreslår kalibreringsklipp."""
+        sd_status = _enrich_sd_status_disk_usage(scan_sd_cards())
+        result = build_calibration_sd_candidates(sd_status, captures_root=self.captures_root)
+        return {"ok": True, **result}
+
+    def import_calibration_from_sd(self, payload: dict) -> dict:
+        """
+        Importerar föreslagna/valda kalibreringsklipp från anslutna SD-kort direkt till
+        captures_root/<project_name>/raw/ och startar valfritt ChArUco-kalibreringen automatiskt.
+        """
+        p = payload or {}
+        raw_name = str(p.get("project_name") or "").strip()
+        safe_name = re.sub(r'[<>:"/\\|?*]+', "_", raw_name).strip(" ._")
+        if not safe_name:
+            safe_name = f"Calib_Rig_{time.strftime('%Y%m%d_%H%M')}"
+
+        auto_calibrate = bool(p.get("auto_calibrate", False))
+        ruler_mm = float(p.get("ruler_100mm") or 100.0)
+        req_fps = float(p.get("fps") or 0.0)
+        paths = p.get("paths") or {}
+
+        with self._lock:
+            if self._is_running:
+                return {"ok": False, "error": "En annan process eller kopiering pågår redan. Vänta eller avbryt den först."}
+
+        target_session_dir = self.captures_root / safe_name
+        target_raw_dir = target_session_dir / "raw"
+        target_proj_dir = target_session_dir / "processed"
+
+        cam_labels = {
+            "cam1_left": "Cam 1 Vänster (cam1_left.mp4)",
+            "cam2_center": "Cam 2 Mitten (cam2_center.mp4)",
+            "cam3_right": "Cam 3 Höger (cam3_right.mp4)",
+        }
+
+        file_tasks = []
+        existing_cams: set[str] = set()
+        selected_cams: set[str] = set()
+        probe_candidates: list[Path] = []
+        for ck in ("cam1_left", "cam2_center", "cam3_right"):
+            dst_p = target_raw_dir / f"{ck}.mp4"
+            if dst_p.is_file():
+                existing_cams.add(ck)
+                probe_candidates.append(dst_p)
+            src_str = str(paths.get(ck) or "").strip()
+            if src_str:
+                src_p = Path(src_str)
+                if src_p.is_file():
+                    selected_cams.add(ck)
+                    probe_candidates.insert(0, src_p)
+                    file_tasks.append(
+                        {
+                            "cam": ck,
+                            "cam_label": cam_labels[ck],
+                            "src": src_p,
+                            "dst": dst_p,
+                            "size_bytes": src_p.stat().st_size,
+                        }
+                    )
+
+        will_have_cams = sorted(existing_cams | selected_cams)
+        will_have_all_3 = len(will_have_cams) == 3
+
+        effective_fps = req_fps if req_fps > 0.0 else 0.0
+        if effective_fps <= 0.0:
+            for p_cand in probe_candidates:
+                try:
+                    meta = probe_video_metadata(p_cand)
+                    if float(meta.get("fps") or 0.0) > 0.0:
+                        effective_fps = float(meta["fps"])
+                        break
+                except Exception:
+                    pass
+        if effective_fps <= 0.0:
+            effective_fps = 50.0
+
+        if not file_tasks:
+            if auto_calibrate and will_have_all_3:
+                cal_res = self.run_charuco_calibration(
+                    {
+                        "calib_mode": "videos",
+                        "raw_dir": str(target_raw_dir),
+                        "ruler_100mm": ruler_mm,
+                        "fps": effective_fps,
+                        "use_audio_sync": True,
+                    }
+                )
+                if not cal_res.get("ok"):
+                    return cal_res
+                return {
+                    "ok": True,
+                    "copy_started": False,
+                    "calibration_started": True,
+                    "project_name": safe_name,
+                    "raw_dir": str(target_raw_dir),
+                    "proj_dir": str(target_proj_dir),
+                    "detected_fps": effective_fps,
+                    "will_have_all_3": True,
+                    "will_have_cams": will_have_cams,
+                }
+            return {
+                "ok": False,
+                "error": "Hittade inga valda kamerafiler på anslutna SD-kort att importera.",
+            }
+
+        on_complete = None
+        if auto_calibrate:
+            if not will_have_all_3:
+                missing_cams = [c for c in ("cam1_left", "cam2_center", "cam3_right") if c not in will_have_cams]
+                return {
+                    "ok": False,
+                    "error": (
+                        f"Kan inte starta kalibrering direkt — saknar {', '.join(missing_cams)} "
+                        "efter denna import. Importera de kort du har nu och koppla sedan in resterande."
+                    ),
+                }
+
+            def _start_calib_after_copy():
+                self._append_log(
+                    f"[ChArUco] Alla 3 kalibreringsfiler klara i {target_raw_dir} — "
+                    f"startar ChArUco-kalibrering ({effective_fps:.2f} fps)..."
+                )
+                cal_res = self.run_charuco_calibration(
+                    {
+                        "calib_mode": "videos",
+                        "raw_dir": str(target_raw_dir),
+                        "ruler_100mm": ruler_mm,
+                        "fps": effective_fps,
+                        "use_audio_sync": True,
+                    }
+                )
+                if not cal_res.get("ok"):
+                    self._append_log(f"[FEL] [ChArUco] Kunde inte starta kalibrering: {cal_res.get('error')}")
+
+            on_complete = _start_calib_after_copy
+
+        target_raw_dir.mkdir(parents=True, exist_ok=True)
+        target_proj_dir.mkdir(parents=True, exist_ok=True)
+        self._start_chunked_copy_job(
+            file_tasks,
+            safe_name,
+            target_raw_dir,
+            target_proj_dir,
+            on_complete=on_complete,
+            copy_context="calib",
+        )
+        return {
+            "ok": True,
+            "copy_started": True,
+            "calibration_started": False,
+            "auto_calibrate": auto_calibrate,
+            "project_name": safe_name,
+            "raw_dir": str(target_raw_dir),
+            "proj_dir": str(target_proj_dir),
+            "detected_fps": effective_fps,
+            "will_have_all_3": will_have_all_3,
+            "will_have_cams": will_have_cams,
+        }
+
     def run_charuco_calibration(self, payload: dict) -> dict:
         p = payload or {}
         calib_mode = str(p.get("calib_mode") or "videos").strip().lower()
@@ -3196,7 +3736,18 @@ class RigStudioBackend:
             return {"ok": False, "error": msg}
 
 
-BACKEND = RigStudioBackend()
+BACKEND: RigStudioBackend | None = None
+_BACKEND_LOCK = threading.Lock()
+
+
+def get_backend() -> RigStudioBackend:
+    """Returnerar (och vid behov skapar) singleton-instansen av RigStudioBackend."""
+    global BACKEND
+    if BACKEND is None:
+        with _BACKEND_LOCK:
+            if BACKEND is None:
+                BACKEND = RigStudioBackend()
+    return BACKEND
 
 
 class StudioRequestHandler(BaseHTTPRequestHandler):
@@ -3444,7 +3995,7 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
             except Exception:
                 payload = {}
 
-            fn = getattr(BACKEND, action, None)
+            fn = getattr(get_backend(), action, None)
             if callable(fn):
                 try:
                     result = fn(payload)
@@ -3752,6 +4303,8 @@ def main():
     if args.port:
         target_port = args.port
 
+    get_backend()
+
     try:
         server = ThreadingHTTPServer(("127.0.0.1", target_port), StudioRequestHandler)
         port = target_port
@@ -3814,3 +4367,4 @@ if __name__ == "__main__":
         except OSError:
             pass
         raise
+w

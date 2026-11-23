@@ -1,0 +1,224 @@
+{
+  "schema_version": 2,
+  "source": "charuco",
+  "created_at": "2026-11-22 18:05:08",
+  "image_size": [
+    2880,
+    3840
+  ],
+  "ruler_100mm": 100.0,
+  "n_frames_used": 18,
+  "n_holdout_frames": 4,
+  "ref_board": "board_1_center",
+  "rms_px": 1.0647,
+  "holdout_rms_px": 1.2267,
+  "cross_cam_overlap": {
+    "cam1_left": 14,
+    "cam3_right": 17
+  },
+  "baselines_mm": {
+    "left_to_center_mm": 177.4,
+    "center_to_right_mm": 171.72,
+    "left_to_right_mm": 346.24
+  },
+  "overall_status": "FAIL",
+  "checks": [
+    {
+      "id": "reproj_rms",
+      "title": "1. ChArUco återprojektionsfel (RMS)",
+      "value": "1.065 px",
+      "target": "< 0.50 px (helst 0.1–0.3 px)",
+      "status": "FAIL",
+      "detail": "Mäter hur exakt den låsta OPENCV_FISHEYE-linsen & riggen träffar uppmätta ChArUco-hörn."
+    },
+    {
+      "id": "holdout_stability",
+      "title": "2. Hold-Out validering (20%) & Rigg-stabilitet",
+      "value": "1.227 px • ±0.243°",
+      "target": "< 0.65 px & < 0.25°",
+      "status": "WARN",
+      "detail": "Testar låst kalibrering på helt nya osparade bild-trior så modellen inte överanpassats."
+    },
+    {
+      "id": "corner_coverage",
+      "title": "3. Fisheye hörntäckning & k1–k4 kanter",
+      "value": "Min 413 hörn • 20.3% i ytterkant",
+      "target": ">= 120 hörn & >= 12% i ytterzon",
+      "status": "OK",
+      "detail": "Behövs för att k1–k4-distorsionen ska bli rätt ända ut i bildkanterna (3DGUT)."
+    },
+    {
+      "id": "physical_geometry",
+      "title": "4. Måttbands- & vinkelkontroll (C1–C3)",
+      "value": "346.2 mm • Yaw -45.4° / +43.4°",
+      "target": "~300 mm & ca ±45° / -12°/+8°",
+      "status": "OK",
+      "detail": "Kontrollmät avståndet C1-lins till C3-lins med måttband — det ska matcha millimetern ovan!"
+    },
+    {
+      "id": "cross_overlap",
+      "title": "5. Gemensam tavel-täckning mellan kameror",
+      "value": "L↔C: 14 • R↔C: 17 trior",
+      "target": ">= 3 delade trior per sida",
+      "status": "OK",
+      "detail": "Vrid riggen -45°..+45° under kalibrering så sidokameror & mittenkamera ser gemensamma tavlor."
+    }
+  ],
+  "per_camera": {
+    "cam1_left": {
+      "width": 2880,
+      "height": 3840,
+      "camera_model": "OPENCV_FISHEYE",
+      "intrinsics": [
+        1470.595188191554,
+        1474.2319713209815,
+        1435.4426488627473,
+        1934.7479383589698,
+        0.1941309507626555,
+        -0.056758148071197945,
+        0.23787288146788124,
+        -0.17098954685210035
+      ],
+      "cam_from_rig_qvec_wxyz": [
+        0.9063299482858503,
+        0.16428003576066513,
+        0.3881226190828621,
+        0.030641919765284308
+      ],
+      "cam_from_rig_tvec_m": [
+        0.1072162703790978,
+        0.025359109991886394,
+        -0.13904622518043455
+      ],
+      "pos_in_ref_m": [
+        -0.17577927159104378,
+        0.013053076498317426,
+        0.020088073659852004
+      ],
+      "pos_mm": [
+        -175.78,
+        13.05,
+        20.09
+      ],
+      "rel_euler_deg": [
+        47.085,
+        18.758,
+        -4.36
+      ],
+      "phys_yaw": -45.43,
+      "phys_tilt": -13.22,
+      "phys_roll": 1.65,
+      "spread_deg": 0.177,
+      "spread_mm": 2.25,
+      "total_corners": 413,
+      "rms_px": 0.966,
+      "outer_zone_pct": 20.3
+    },
+    "cam2_center": {
+      "width": 2880,
+      "height": 3840,
+      "camera_model": "OPENCV_FISHEYE",
+      "intrinsics": [
+        1460.7479539508522,
+        1464.325621025018,
+        1433.3477212054747,
+        1935.399871034241,
+        0.18205407421500117,
+        -0.012765384779840992,
+        0.17097352774713886,
+        -0.14027412496242064
+      ],
+      "cam_from_rig_qvec_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "cam_from_rig_tvec_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pos_in_ref_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pos_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rel_euler_deg": [
+        -0.0,
+        0.0,
+        -0.0
+      ],
+      "phys_yaw": 0.0,
+      "phys_tilt": 8.0,
+      "phys_roll": 0.0,
+      "spread_deg": 0.0,
+      "spread_mm": 0.0,
+      "total_corners": 896,
+      "rms_px": 0.742,
+      "outer_zone_pct": 26.5
+    },
+    "cam3_right": {
+      "width": 2880,
+      "height": 3840,
+      "camera_model": "OPENCV_FISHEYE",
+      "intrinsics": [
+        1468.4529536164016,
+        1473.8332960404668,
+        1441.034035760115,
+        1930.7572518404886,
+        0.17165259666790922,
+        0.03268334177708047,
+        0.07534974090848467,
+        -0.07842976224567826
+      ],
+      "cam_from_rig_qvec_wxyz": [
+        0.9163016587481673,
+        0.15329816596925816,
+        -0.36984964350036736,
+        -0.010108594782180317
+      ],
+      "cam_from_rig_tvec_m": [
+        -0.10905941046227303,
+        0.02298988873620176,
+        -0.13063947321979955
+      ],
+      "pos_in_ref_m": [
+        0.17037467665570205,
+        0.005426935777570072,
+        0.02078893648456584
+      ],
+      "pos_mm": [
+        170.37,
+        5.43,
+        20.79
+      ],
+      "rel_euler_deg": [
+        -44.8,
+        16.763,
+        5.686
+      ],
+      "phys_yaw": 43.42,
+      "phys_tilt": -11.01,
+      "phys_roll": -0.05,
+      "spread_deg": 0.243,
+      "spread_mm": 3.14,
+      "total_corners": 630,
+      "rms_px": 1.447,
+      "outer_zone_pct": 40.6
+    }
+  },
+  "preview_paths": {
+    "coverage_cam1_left": "d:\\OptiGSRigg\\config\\calib_preview\\coverage_cam1_left.jpg",
+    "reproj_cam1_left": "d:\\OptiGSRigg\\config\\calib_preview\\reproj_cam1_left.jpg",
+    "coverage_cam2_center": "d:\\OptiGSRigg\\config\\calib_preview\\coverage_cam2_center.jpg",
+    "reproj_cam2_center": "d:\\OptiGSRigg\\config\\calib_preview\\reproj_cam2_center.jpg",
+    "coverage_cam3_right": "d:\\OptiGSRigg\\config\\calib_preview\\coverage_cam3_right.jpg",
+    "reproj_cam3_right": "d:\\OptiGSRigg\\config\\calib_preview\\reproj_cam3_right.jpg"
+  }
+}

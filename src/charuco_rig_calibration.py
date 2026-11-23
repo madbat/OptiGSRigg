@@ -1260,7 +1260,7 @@ def generate_charuco_boards(
 # =============================================================================
 
 class MultiBoardDetector:
-    """Snabb detektor för alla 3 unika ChArUco-tavlor i OpenCV 5.0."""
+    """Snabb detektor för alla 3 unika ChArUco-tavlor i OpenCV 5.0 (med D-Log M CLAHE-stöd)."""
 
     def __init__(
         self,
@@ -1272,6 +1272,7 @@ class MultiBoardDetector:
         self.boards: Dict[str, Any] = {}
         self.detectors: Dict[str, Any] = {}
         self.obj_corners: Dict[str, np.ndarray] = {}
+        self._clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
         for b_name, id_off, _, _ in BOARD_SPECS:
             board = make_charuco_board(id_off, square_mm=square_mm, marker_mm=marker_mm, cols=cols, rows=rows)
             self.boards[b_name] = board
@@ -1281,21 +1282,39 @@ class MultiBoardDetector:
     def detect_image(self, gray_or_bgr: np.ndarray, min_corners: int = 6) -> Dict[str, Tuple[np.ndarray, np.ndarray]]:
         """
         Returnerar { board_name: (corner_ids (K,), img_pts (K, 2)) } i källbildens pixelkoordinater.
-        Använder snabbskala (bredd ~1440 px) för markörletning och förfinar i full upplösning.
+        Använder automatisk linjär kontraststräckning och lokal CLAHE som fallback för platt 10-bit D-Log M.
         """
         gray = cv2.cvtColor(gray_or_bgr, cv2.COLOR_BGR2GRAY) if gray_or_bgr.ndim == 3 else gray_or_bgr
+        if gray.size == 0:
+            return {}
         h, w = gray.shape[:2]
+        g_min, g_max = int(gray.min()), int(gray.max())
+        if (g_max - g_min) < 180 and g_max > g_min:
+            gray_subpix = cv2.normalize(gray, None, 0, 255, cv2.NORM_MINMAX)
+        else:
+            gray_subpix = gray
+
+        gray_clahe: Optional[np.ndarray] = None
         out: Dict[str, Tuple[np.ndarray, np.ndarray]] = {}
         for b_name, det in self.detectors.items():
             cc, ci, _mc, _mi = det.detectBoard(gray)
-            if cc is not None and ci is not None and len(ci) >= min_corners:
+            cur_n = len(ci) if (cc is not None and ci is not None) else 0
+            if cur_n < 18:
+                if gray_clahe is None:
+                    gray_clahe = self._clahe.apply(gray_subpix)
+                cc_c, ci_c, _mc_c, _mi_c = det.detectBoard(gray_clahe)
+                c_n = len(ci_c) if (cc_c is not None and ci_c is not None) else 0
+                if c_n > cur_n:
+                    cc, ci = cc_c, ci_c
+                    cur_n = c_n
+            if cc is not None and ci is not None and cur_n >= min_corners:
                 ids_flat = ci.reshape(-1).astype(np.int32)
                 pts = cc.reshape(-1, 2).astype(np.float64)
                 # Förfina med cornerSubPix i full upplösning för maximal skärpa
                 if h >= 1200 and w >= 1200:
                     pts32 = pts.reshape(-1, 1, 2).astype(np.float32)
                     crit = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 20, 0.01)
-                    cv2.cornerSubPix(gray, pts32, (7, 7), (-1, -1), crit)
+                    cv2.cornerSubPix(gray_subpix, pts32, (7, 7), (-1, -1), crit)
                     pts = pts32.reshape(-1, 2).astype(np.float64)
                 out[b_name] = (ids_flat, pts)
         return out
@@ -1368,12 +1387,13 @@ def _extract_candidate_triplets_from_videos(
             candidates = sorted({candidates[int(i * stride)] for i in range(120)})
 
         ref_max_dim = max(max(w, h) for (w, h) in image_sizes.values())
-        thr_px = max(2.0, 6.5 * (float(ref_max_dim) / 3840.0))
+        strict_thr_px = max(1.2, 2.0 * (float(ref_max_dim) / 3840.0))
+        thr_px = max(2.5, 5.0 * (float(ref_max_dim) / 3840.0))
 
         if progress_cb:
             progress_cb(
                 f"[ChArUco] Skannar {len(candidates)} synkroniserade tidpunkter efter klappen "
-                f"({image_sizes['cam2_center'][0]}x{image_sizes['cam2_center'][1]}, rörelsegräns {thr_px:.1f} px/ruta)..."
+                f"({image_sizes['cam2_center'][0]}x{image_sizes['cam2_center'][1]}, rörelsegräns {strict_thr_px:.1f}/{thr_px:.1f} px/ruta)..."
             )
 
         collected: List[Dict[str, Any]] = []
@@ -1503,51 +1523,64 @@ def _extract_candidate_triplets_from_videos(
                         f"[ChArUco] Skanning {idx + 1}/{len(candidates)}: hittat {len(collected)} användbara bild-trior..."
                     )
 
-        still_pool = [c for c in collected if c["motion_px"] <= thr_px]
-        n_discarded_motion = len(collected) - len(still_pool)
-        if len(still_pool) < min(8, len(collected)) and len(collected) > 0:
-            by_motion = sorted(collected, key=lambda c: c["motion_px"])
-            keep_n = min(len(collected), max(12, len(still_pool)))
-            still_pool = sorted(by_motion[:keep_n], key=lambda c: c["frame_idx"])
-            if progress_cb:
-                progress_cb(
-                    f"[ChArUco] Varning: få helt stilla frys-stopp hittades ({len(collected) - n_discarded_motion} st), "
-                    f"använder de {len(still_pool)} lugnaste tidpunkterna."
+        def _cluster_still_stops(pool: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+            ordered = sorted(pool, key=lambda o: o["frame_idx"])
+            pose_shift_thr_px = 0.018 * float(ref_max_dim)
+            clusters: List[List[Dict[str, Any]]] = []
+            for curr in ordered:
+                if not clusters:
+                    clusters.append([curr])
+                    continue
+                cluster = clusters[-1]
+                prev = cluster[-1]
+                anchor = cluster[0]
+                adj_scan = (curr["cand_idx"] - prev["cand_idx"]) <= 2
+                n_sh_prev, shift_prev = _shared_corner_median_shift_px(prev["observations"], curr["observations"])
+                n_sh_anch, shift_anch = _shared_corner_median_shift_px(anchor["observations"], curr["observations"])
+                same_stop = (
+                    adj_scan
+                    and (n_sh_prev >= 6 and shift_prev <= pose_shift_thr_px)
+                    and (n_sh_anch >= 6 and shift_anch <= pose_shift_thr_px * 1.25)
                 )
+                if same_stop:
+                    cluster.append(curr)
+                else:
+                    clusters.append([curr])
 
-        still_pool.sort(key=lambda o: o["frame_idx"])
-        pose_shift_thr_px = 0.018 * float(ref_max_dim)
-        clusters: List[List[Dict[str, Any]]] = []
-        for curr in still_pool:
-            if not clusters:
-                clusters.append([curr])
-                continue
-            cluster = clusters[-1]
-            prev = cluster[-1]
-            anchor = cluster[0]
-            adj_scan = (curr["cand_idx"] - prev["cand_idx"]) <= 2
-            n_sh_prev, shift_prev = _shared_corner_median_shift_px(prev["observations"], curr["observations"])
-            n_sh_anch, shift_anch = _shared_corner_median_shift_px(anchor["observations"], curr["observations"])
-            same_stop = (
-                adj_scan
-                and (n_sh_prev >= 6 and shift_prev <= pose_shift_thr_px)
-                and (n_sh_anch >= 6 and shift_anch <= pose_shift_thr_px * 1.25)
-            )
-            if same_stop:
-                cluster.append(curr)
-            else:
-                clusters.append([curr])
+            deduped_out: List[Dict[str, Any]] = [max(cl, key=lambda c: c["quality_score"]) for cl in clusters]
+            if len(deduped_out) < 2 and len(ordered) >= 4:
+                used_names = {c["frame_name"] for c in deduped_out}
+                rem = [c for c in ordered if c["frame_name"] not in used_names]
+                need = min(12, len(ordered)) - len(deduped_out)
+                if rem and need > 0:
+                    idxs = np.linspace(0, len(rem) - 1, min(need, len(rem)), dtype=int)
+                    for i in sorted(set(int(x) for x in idxs)):
+                        deduped_out.append(rem[i])
+            return deduped_out
 
-        deduped: List[Dict[str, Any]] = [max(cl, key=lambda c: c["quality_score"]) for cl in clusters]
+        strict_pool = [c for c in collected if c["motion_px"] <= strict_thr_px]
+        strict_deduped = _cluster_still_stops(strict_pool)
+        cam_hits_strict = {
+            ck: sum(len(fr["observations"].get(ck, {})) for fr in strict_deduped)
+            for ck in CAM_ORDER
+        }
 
-        if len(deduped) < 2 and len(still_pool) >= 4:
-            used_names = {c["frame_name"] for c in deduped}
-            rem = [c for c in still_pool if c["frame_name"] not in used_names]
-            need = min(12, len(still_pool)) - len(deduped)
-            if rem and need > 0:
-                idxs = np.linspace(0, len(rem) - 1, min(need, len(rem)), dtype=int)
-                for i in sorted(set(int(x) for x in idxs)):
-                    deduped.append(rem[i])
+        if len(strict_deduped) >= 12 and all(cam_hits_strict[ck] >= 4 for ck in CAM_ORDER):
+            deduped = strict_deduped
+            n_discarded_motion = len(collected) - len(strict_pool)
+        else:
+            still_pool = [c for c in collected if c["motion_px"] <= thr_px]
+            n_discarded_motion = len(collected) - len(still_pool)
+            if len(still_pool) < min(8, len(collected)) and len(collected) > 0:
+                by_motion = sorted(collected, key=lambda c: c["motion_px"])
+                keep_n = min(len(collected), max(12, len(still_pool)))
+                still_pool = sorted(by_motion[:keep_n], key=lambda c: c["frame_idx"])
+                if progress_cb:
+                    progress_cb(
+                        f"[ChArUco] Varning: få helt stilla frys-stopp hittades ({len(collected) - n_discarded_motion} st), "
+                        f"använder de {len(still_pool)} lugnaste tidpunkterna."
+                    )
+            deduped = _cluster_still_stops(still_pool)
 
         selected = list(deduped)
         if len(selected) > max_poses:
@@ -1603,6 +1636,58 @@ def _extract_candidate_triplets_from_videos(
 # 5. GLOBAL GLES BUNDLE ADJUSTMENT & HOLD-OUT KORSVALIDERING
 # =============================================================================
 
+def _estimate_single_view_pose(
+    obj_pts: np.ndarray,
+    img_pts: np.ndarray,
+    cam_params: np.ndarray,
+) -> Optional[Tuple[np.ndarray, np.ndarray, float]]:
+    """Estimerar enskild tavle-pose (rvec, tvec, rms_px) mot given `OPENCV_FISHEYE`-lins."""
+    rays = undistort_fisheye_to_rays(img_pts, cam_params)
+    norm_2d = (rays[:, :2] / np.maximum(1e-4, rays[:, 2:3])).reshape(-1, 1, 2).astype(np.float64)
+    ok, rvec, tvec, _inl = cv2.solvePnPRansac(
+        obj_pts.reshape(-1, 1, 3),
+        norm_2d,
+        np.eye(3, dtype=np.float64),
+        None,
+        flags=cv2.SOLVEPNP_IPPE,
+        reprojectionError=0.025,
+        confidence=0.99,
+    )
+    if not ok or float(tvec[2, 0]) <= 0.05:
+        ok, rvec, tvec, _inl = cv2.solvePnPRansac(
+            obj_pts.reshape(-1, 1, 3),
+            norm_2d,
+            np.eye(3, dtype=np.float64),
+            None,
+            flags=cv2.SOLVEPNP_ITERATIVE,
+            reprojectionError=0.025,
+            confidence=0.99,
+        )
+    if not ok or float(tvec[2, 0]) <= 0.05:
+        return None
+    rvec_f = rvec.reshape(3).astype(np.float64)
+    tvec_f = tvec.reshape(3).astype(np.float64)
+
+    def _pnp_res(x):
+        pred, z = project_fisheye_world_points(obj_pts, x[:3], x[3:6], cam_params)
+        pen = np.where(z <= 0.05, 50.0, 0.0)[:, None]
+        return ((pred - img_pts) + pen).ravel()
+
+    sol = optimize.least_squares(
+        _pnp_res,
+        np.concatenate([rvec_f, tvec_f]),
+        loss="huber",
+        f_scale=2.0,
+        x_scale="jac",
+        max_nfev=120,
+    )
+    pred_v, z_v = project_fisheye_world_points(obj_pts, sol.x[:3], sol.x[3:6], cam_params)
+    if np.any(z_v <= 0.05):
+        return None
+    v_rms = float(math.sqrt(float(np.mean(np.sum((pred_v - img_pts) ** 2, axis=1)))))
+    return sol.x[:3].copy(), sol.x[3:6].copy(), v_rms
+
+
 def _calibrate_single_camera_intrinsics(
     cam_key: str,
     width: int,
@@ -1612,87 +1697,136 @@ def _calibrate_single_camera_intrinsics(
 ) -> Tuple[np.ndarray, Dict[Tuple[int, str], Tuple[np.ndarray, np.ndarray]]]:
     """
     Kalibrerar initial `OPENCV_FISHEYE` [fx, fy, cx, cy, k1, k2, k3, k4] och enskilda
-    tavle-poser (rvec, tvec) för en kamera via iterative PnP + gles Huber Bundle Adjustment.
+    tavle-poser (rvec, tvec) för en kamera via `cv2.fisheye.calibrate` (med 2-stegs
+    outlier-rensning) och exakt PnP-fallback.
     """
-    f0 = 0.55 * float(min(width, height))
-    K_params = np.array([f0, f0, width * 0.5, height * 0.5, -0.04, 0.008, -0.002, 0.0005], dtype=np.float64)
-
-    view_poses: Dict[int, Tuple[np.ndarray, np.ndarray, str, np.ndarray, np.ndarray]] = {}
-    valid_views: List[Tuple[int, str, np.ndarray, np.ndarray]] = []
-
+    non_collinear: List[Tuple[int, str, np.ndarray, np.ndarray]] = []
     for v_idx, (b_name, ids_arr, img_pts) in enumerate(views):
+        if len(ids_arr) < 6:
+            continue
         obj_pts = detector.obj_corners[b_name][ids_arr]
-        rays = undistort_fisheye_to_rays(img_pts, K_params)
-        norm_2d = (rays[:, :2] / rays[:, 2:3]).reshape(-1, 1, 2).astype(np.float64)
-        ok, rvec, tvec, _inl = cv2.solvePnPRansac(
-            obj_pts.reshape(-1, 1, 3),
-            norm_2d,
-            np.eye(3, dtype=np.float64),
-            None,
-            flags=cv2.SOLVEPNP_IPPE,
-            reprojectionError=0.025,
-            confidence=0.99,
-        )
-        if not ok or float(tvec[2, 0]) <= 0.05:
-            ok, rvec, tvec, _inl = cv2.solvePnPRansac(
-                obj_pts.reshape(-1, 1, 3),
-                norm_2d,
-                np.eye(3, dtype=np.float64),
-                None,
-                flags=cv2.SOLVEPNP_ITERATIVE,
-                reprojectionError=0.025,
-                confidence=0.99,
+        if float(np.ptp(obj_pts[:, 0])) > 1e-3 and float(np.ptp(obj_pts[:, 1])) > 1e-3:
+            non_collinear.append((v_idx, b_name, obj_pts, img_pts))
+
+    if not non_collinear:
+        raise RuntimeError(f"Hittade inga giltiga 2D-ChArUco-vyer för {cam_key}.")
+
+    rich_views = [item for item in non_collinear if len(item[2]) >= 8]
+    calib_pool = rich_views if len(rich_views) >= 6 else non_collinear
+
+    def _run_cv_fisheye(pool_items: List[Tuple[int, str, np.ndarray, np.ndarray]]) -> Tuple[np.ndarray, List[Tuple[np.ndarray, np.ndarray, float]]]:
+        objs = [it[2].reshape(-1, 1, 3).astype(np.float64) for it in pool_items]
+        imgs = [it[3].reshape(-1, 1, 2).astype(np.float64) for it in pool_items]
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 1e-6)
+        K_mat = np.eye(3, dtype=np.float64)
+        D_vec = np.zeros((4, 1), dtype=np.float64)
+        flags = cv2.fisheye.CALIB_RECOMPUTE_EXTRINSIC | cv2.fisheye.CALIB_FIX_SKEW
+        try:
+            _rms, K_out, D_out, rvecs, tvecs = cv2.fisheye.calibrate(
+                objs, imgs, (int(width), int(height)), K_mat, D_vec, flags=flags, criteria=criteria
             )
-        if not ok or float(tvec[2, 0]) <= 0.05:
-            continue
-        rvec_f = rvec.reshape(3).astype(np.float64)
-        tvec_f = tvec.reshape(3).astype(np.float64)
-
-        def _pnp_res(x):
-            pred, z = project_fisheye_world_points(obj_pts, x[:3], x[3:6], K_params)
-            pen = np.where(z <= 0.05, 50.0, 0.0)[:, None]
-            return ((pred - img_pts) + pen).ravel()
-
-        sol = optimize.least_squares(
-            _pnp_res,
-            np.concatenate([rvec_f, tvec_f]),
-            loss="huber",
-            f_scale=2.0,
-            x_scale="jac",
-            max_nfev=120,
+        except cv2.error:
+            f0_guess = 0.52 * float(min(width, height))
+            K_mat = np.array([[f0_guess, 0.0, width * 0.5], [0.0, f0_guess, height * 0.5], [0.0, 0.0, 1.0]], dtype=np.float64)
+            D_vec = np.array([[0.10], [0.0], [0.0], [0.0]], dtype=np.float64)
+            flags_guess = flags | cv2.fisheye.CALIB_USE_INTRINSIC_GUESS
+            _rms, K_out, D_out, rvecs, tvecs = cv2.fisheye.calibrate(
+                objs, imgs, (int(width), int(height)), K_mat, D_vec, flags=flags_guess, criteria=criteria
+            )
+        intr_vec = np.array(
+            [
+                K_out[0, 0],
+                K_out[1, 1],
+                K_out[0, 2],
+                K_out[1, 2],
+                D_out[0, 0],
+                D_out[1, 0],
+                D_out[2, 0],
+                D_out[3, 0],
+            ],
+            dtype=np.float64,
         )
-        pred_v, _ = project_fisheye_world_points(obj_pts, sol.x[:3], sol.x[3:6], K_params)
-        v_rms = float(math.sqrt(float(np.mean(np.sum((pred_v - img_pts) ** 2, axis=1)))))
-        if v_rms > 25.0:
-            continue
-        view_poses[v_idx] = (sol.x[:3], sol.x[3:6], b_name, obj_pts, img_pts)
-        valid_views.append((v_idx, b_name, obj_pts, img_pts))
+        per_view: List[Tuple[np.ndarray, np.ndarray, float]] = []
+        for idx_p, (_vi, _bn, obj_p, img_p) in enumerate(pool_items):
+            rv = np.asarray(rvecs[idx_p], dtype=np.float64).reshape(3)
+            tv = np.asarray(tvecs[idx_p], dtype=np.float64).reshape(3)
+            pred_p, z_p = project_fisheye_world_points(obj_p, rv, tv, intr_vec)
+            if np.any(z_p <= 0.05):
+                v_rms = 999.0
+            else:
+                v_rms = float(math.sqrt(float(np.mean(np.sum((pred_p - img_p) ** 2, axis=1)))))
+            per_view.append((rv, tv, v_rms))
+        return intr_vec, per_view
+
+    def _intr_sane(intr: np.ndarray) -> bool:
+        fx, fy, cx, cy = float(intr[0]), float(intr[1]), float(intr[2]), float(intr[3])
+        return (
+            0.25 * min(width, height) <= fx <= 1.8 * max(width, height)
+            and 0.25 * min(width, height) <= fy <= 1.8 * max(width, height)
+            and 0.25 * width <= cx <= 0.75 * width
+            and 0.25 * height <= cy <= 0.75 * height
+            and bool(np.all(np.isfinite(intr)))
+        )
+
+    refined_intr: Optional[np.ndarray] = None
+    refined_poses: Dict[Tuple[int, str], Tuple[np.ndarray, np.ndarray]] = {}
+
+    if len(calib_pool) >= 3:
+        try:
+            intr1, pv1 = _run_cv_fisheye(calib_pool)
+            keep_indices = list(range(len(calib_pool)))
+            if len(calib_pool) >= 10:
+                med_r = float(np.median([x[2] for x in pv1]))
+                thr_r = max(2.5, 2.8 * med_r)
+                pruned = [i for i, (_rv, _tv, r_val) in enumerate(pv1) if r_val <= thr_r]
+                if len(pruned) >= 8 and len(pruned) < len(calib_pool):
+                    keep_indices = pruned
+                    sub_pool = [calib_pool[i] for i in keep_indices]
+                    intr2, pv2 = _run_cv_fisheye(sub_pool)
+                    if _intr_sane(intr2):
+                        intr1, pv1 = intr2, pv2
+                        calib_pool = sub_pool
+            if _intr_sane(intr1):
+                refined_intr = intr1
+                for idx_k, (_rv, _tv, r_val) in enumerate(pv1):
+                    v_idx, b_name, _obj_p, _img_p = calib_pool[idx_k]
+                    if r_val <= 12.0:
+                        refined_poses[(v_idx, b_name)] = (_rv.copy(), _tv.copy())
+        except cv2.error:
+            refined_intr = None
+
+    if refined_intr is not None:
+        for v_idx, b_name, obj_pts, img_pts in non_collinear:
+            if (v_idx, b_name) in refined_poses:
+                continue
+            est = _estimate_single_view_pose(obj_pts, img_pts, refined_intr)
+            if est is not None and est[2] <= 12.0:
+                refined_poses[(v_idx, b_name)] = (est[0], est[1])
+        if refined_poses:
+            return refined_intr, refined_poses
+
+    # Fallback: exakt PnP + exakt TRF Bundle Adjustment
+    f0 = 0.52 * float(min(width, height))
+    K_params = np.array([f0, f0, width * 0.5, height * 0.5, 0.10, 0.0, 0.0, 0.0], dtype=np.float64)
+    valid_views: List[Tuple[int, str, np.ndarray, np.ndarray, np.ndarray, np.ndarray]] = []
+    for v_idx, b_name, obj_pts, img_pts in non_collinear:
+        est = _estimate_single_view_pose(obj_pts, img_pts, K_params)
+        if est is not None and est[2] <= 25.0:
+            valid_views.append((v_idx, b_name, obj_pts, img_pts, est[0], est[1]))
 
     if not valid_views:
         raise RuntimeError(f"Kunde inte estimera några initiala ChArUco-poser för {cam_key}.")
 
     n_views = len(valid_views)
-    x0 = np.concatenate([K_params] + [np.concatenate([view_poses[v[0]][0], view_poses[v[0]][1]]) for v in valid_views])
-
+    x0 = np.concatenate([K_params] + [np.concatenate([v[4], v[5]]) for v in valid_views])
     n_res = sum(len(v[2]) * 2 for v in valid_views)
     n_par = 8 + 6 * n_views
-    rows_sp: List[int] = []
-    cols_sp: List[int] = []
-    r_cur = 0
-    for i, (_v_idx, _b_name, obj_pts, _img_pts) in enumerate(valid_views):
-        m = len(obj_pts) * 2
-        v_col = 8 + 6 * i
-        for rr in range(r_cur, r_cur + m):
-            rows_sp.extend([rr] * 14)
-            cols_sp.extend(list(range(8)) + list(range(v_col, v_col + 6)))
-        r_cur += m
-    jac_sp = sparse.coo_matrix((np.ones(len(rows_sp), dtype=bool), (rows_sp, cols_sp)), shape=(n_res, n_par))
 
     def _intrinsics_res(x):
         intr = x[:8]
         out = np.empty(n_res, dtype=np.float64)
         pos = 0
-        for i, (_v_idx, _b_name, obj_pts, img_pts) in enumerate(valid_views):
+        for i, (_vi, _bn, obj_pts, img_pts, _r0, _t0) in enumerate(valid_views):
             off = 8 + 6 * i
             pred, z = project_fisheye_world_points(obj_pts, x[off : off + 3], x[off + 3 : off + 6], intr)
             diff = pred - img_pts
@@ -1716,17 +1850,16 @@ def _calibrate_single_camera_intrinsics(
         _intrinsics_res,
         x0,
         bounds=(lb, ub),
-        jac_sparsity=jac_sp,
         method="trf",
+        tr_solver="exact",
         loss="huber",
         f_scale=1.5,
         x_scale="jac",
-        max_nfev=550,
+        max_nfev=150,
     )
-
     refined_intr = sol.x[:8].copy()
-    refined_poses: Dict[Tuple[int, str], Tuple[np.ndarray, np.ndarray]] = {}
-    for i, (v_idx, b_name, _obj_pts, _img_pts) in enumerate(valid_views):
+    refined_poses = {}
+    for i, (v_idx, b_name, _obj_pts, _img_pts, _r0, _t0) in enumerate(valid_views):
         off = 8 + 6 * i
         refined_poses[(v_idx, b_name)] = (sol.x[off : off + 3].copy(), sol.x[off + 3 : off + 6].copy())
     return refined_intr, refined_poses
@@ -1944,32 +2077,19 @@ def _run_joint_rig_bundle_adjustment(
     if n_res == 0:
         return intrinsics, T_cam_from_rig, T_refB_from_B, T_rig_frames, 999.0
 
-    # Gles Jacobian-struktur för snabb LM/TRF
-    sp_rows: List[int] = []
-    sp_cols: List[int] = []
-    r_cur = 0
-    for ti, ck, bn, obj_pts, _img_pts in obs_list:
-        m = len(obj_pts) * 2
-        cols: List[int] = []
-        c_off = cam_param_offset[ck]
-        cols.extend(range(c_off, c_off + 8))
-        if ck in ext_param_offset:
-            e_off = ext_param_offset[ck]
-            cols.extend(range(e_off, e_off + 6))
-        if bn in board_param_offset:
-            b_off = board_param_offset[bn]
-            cols.extend(range(b_off, b_off + 6))
-        f_off = frame_param_offset[ti]
-        cols.extend(range(f_off, f_off + 6))
-        for rr in range(r_cur, r_cur + m):
-            sp_rows.extend([rr] * len(cols))
-            sp_cols.extend(cols)
-        r_cur += m
+    lb = np.full(n_params, -np.inf, dtype=np.float64)
+    ub = np.full(n_params, np.inf, dtype=np.float64)
+    for ck in CAM_ORDER:
+        co = cam_param_offset[ck]
+        fx0, fy0, cx0, cy0 = float(x0[co]), float(x0[co + 1]), float(x0[co + 2]), float(x0[co + 3])
+        lb[co], ub[co] = max(100.0, 0.35 * fx0), 2.2 * fx0
+        lb[co + 1], ub[co + 1] = max(100.0, 0.35 * fy0), 2.2 * fy0
+        lb[co + 2], ub[co + 2] = max(1.0, 0.55 * cx0), 1.45 * cx0
+        lb[co + 3], ub[co + 3] = max(1.0, 0.55 * cy0), 1.45 * cy0
+        lb[co + 4 : co + 8], ub[co + 4 : co + 8] = -2.5, 2.5
+    x0 = np.clip(x0, lb + 1e-6, ub - 1e-6)
 
-    jac_sp = sparse.coo_matrix((np.ones(len(sp_rows), dtype=bool), (sp_rows, sp_cols)), shape=(n_res, n_params))
-
-    def _residual_fn(x: np.ndarray) -> np.ndarray:
-        out = np.empty(n_res, dtype=np.float64)
+    def _unpack_se3_maps(x: np.ndarray) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray], Dict[int, np.ndarray]]:
         cam_se3: Dict[str, np.ndarray] = {"cam2_center": np.eye(4, dtype=np.float64)}
         for ck in ("cam1_left", "cam3_right"):
             eo = ext_param_offset[ck]
@@ -1982,30 +2102,110 @@ def _run_joint_rig_bundle_adjustment(
         frame_se3: Dict[int, np.ndarray] = {}
         for ti, fo in frame_param_offset.items():
             frame_se3[ti] = _se3_from_rvec_tvec(x[fo : fo + 3], x[fo + 3 : fo + 6])
+        return cam_se3, board_se3, frame_se3
 
+    def _masked_diff(pred: np.ndarray, z: np.ndarray, img_pts: np.ndarray) -> np.ndarray:
+        diff = pred - img_pts
+        bad = z <= 0.05
+        if np.any(bad):
+            diff[bad] = 250.0
+        return diff.ravel()
+
+    def _residual_fn(x: np.ndarray) -> np.ndarray:
+        out = np.empty(n_res, dtype=np.float64)
+        cam_se3, board_se3, frame_se3 = _unpack_se3_maps(x)
         pos = 0
         for ti, ck, bn, obj_pts, img_pts in obs_list:
             T_c_b = cam_se3[ck] @ frame_se3[ti] @ board_se3[bn]
             co = cam_param_offset[ck]
             pred, z = project_fisheye_world_points(obj_pts, T_c_b[:3, :3], T_c_b[:3, 3], x[co : co + 8])
-            diff = pred - img_pts
-            bad = z <= 0.05
-            if np.any(bad):
-                diff[bad] = 250.0
             m = len(obj_pts) * 2
-            out[pos : pos + m] = diff.ravel()
+            out[pos : pos + m] = _masked_diff(pred, z, img_pts)
             pos += m
         return out
 
-    sol = optimize.least_squares(
+    def _jacobian_fn(x: np.ndarray) -> np.ndarray:
+        """Snabb block-vis analytisk/finit-differens Jacobian enbart över aktiva parametrar per observation."""
+        J = np.zeros((n_res, n_params), dtype=np.float64)
+        cam_se3, board_se3, frame_se3 = _unpack_se3_maps(x)
+        eps = 1e-6
+        pos = 0
+        for ti, ck, bn, obj_pts, img_pts in obs_list:
+            m = len(obj_pts) * 2
+            co = cam_param_offset[ck]
+            intr = x[co : co + 8]
+            T_c = cam_se3[ck]
+            T_f = frame_se3[ti]
+            T_b = board_se3[bn]
+            T_cb = T_c @ T_f @ T_b
+            p0, z0 = project_fisheye_world_points(obj_pts, T_cb[:3, :3], T_cb[:3, 3], intr)
+            r0 = _masked_diff(p0, z0, img_pts)
+
+            for j in range(8):
+                h = max(1e-6, abs(float(intr[j])) * 1e-6)
+                intr2 = intr.copy()
+                intr2[j] += h
+                p1, z1 = project_fisheye_world_points(obj_pts, T_cb[:3, :3], T_cb[:3, 3], intr2)
+                J[pos : pos + m, co + j] = (_masked_diff(p1, z1, img_pts) - r0) / h
+
+            if ck in ext_param_offset:
+                eo = ext_param_offset[ck]
+                ev = x[eo : eo + 6]
+                T_fb = T_f @ T_b
+                for j in range(6):
+                    ev2 = ev.copy()
+                    ev2[j] += eps
+                    T1 = _se3_from_rvec_tvec(ev2[:3], ev2[3:6]) @ T_fb
+                    p1, z1 = project_fisheye_world_points(obj_pts, T1[:3, :3], T1[:3, 3], intr)
+                    J[pos : pos + m, eo + j] = (_masked_diff(p1, z1, img_pts) - r0) / eps
+
+            if bn in board_param_offset:
+                bo = board_param_offset[bn]
+                bv = x[bo : bo + 6]
+                T_cf = T_c @ T_f
+                for j in range(6):
+                    bv2 = bv.copy()
+                    bv2[j] += eps
+                    T1 = T_cf @ _se3_from_rvec_tvec(bv2[:3], bv2[3:6])
+                    p1, z1 = project_fisheye_world_points(obj_pts, T1[:3, :3], T1[:3, 3], intr)
+                    J[pos : pos + m, bo + j] = (_masked_diff(p1, z1, img_pts) - r0) / eps
+
+            fo = frame_param_offset[ti]
+            fv = x[fo : fo + 6]
+            for j in range(6):
+                fv2 = fv.copy()
+                fv2[j] += eps
+                T1 = T_c @ _se3_from_rvec_tvec(fv2[:3], fv2[3:6]) @ T_b
+                p1, z1 = project_fisheye_world_points(obj_pts, T1[:3, :3], T1[:3, 3], intr)
+                J[pos : pos + m, fo + j] = (_masked_diff(p1, z1, img_pts) - r0) / eps
+
+            pos += m
+        return J
+
+    # 2-stegs exakt TRF: grov inriktning (soft_l1) följd av skarp subpixel-förfining (huber)
+    sol1 = optimize.least_squares(
         _residual_fn,
         x0,
-        jac_sparsity=jac_sp,
+        jac=_jacobian_fn,
+        bounds=(lb, ub),
         method="trf",
+        tr_solver="exact",
+        loss="soft_l1",
+        f_scale=5.0,
+        x_scale="jac",
+        max_nfev=min(80, max_nfev),
+    )
+    sol = optimize.least_squares(
+        _residual_fn,
+        sol1.x,
+        jac=_jacobian_fn,
+        bounds=(lb, ub),
+        method="trf",
+        tr_solver="exact",
         loss="huber",
         f_scale=1.5,
         x_scale="jac",
-        max_nfev=max_nfev,
+        max_nfev=min(120, max_nfev),
     )
 
     # Packa upp optimerade värden
@@ -2166,6 +2366,7 @@ def _render_calibration_visuals(
     T_rig_frames: Dict[int, np.ndarray],
     raw_frames_cache: Dict[str, Dict[str, np.ndarray]],
     preview_dir: Path,
+    preview_lut_path: Optional[Path] = None,
 ) -> Tuple[Dict[str, Dict[str, Any]], Dict[str, str]]:
     """
     Ritar:
@@ -2206,6 +2407,17 @@ def _render_calibration_visuals(
                 best_fr = fr
 
     best_ti = frames.index(best_fr) if best_fr is not None else -1
+
+    lut256_bgr: Optional[np.ndarray] = None
+    if preview_lut_path and Path(preview_lut_path).is_file():
+        try:
+            if str(SRC_DIR) not in sys.path:
+                sys.path.insert(0, str(SRC_DIR))
+            import process_3dgs_rig as pr
+
+            lut256_bgr = pr._load_cube_lut256_bgr(Path(preview_lut_path))
+        except Exception:
+            lut256_bgr = None
 
     for ck in CAM_ORDER:
         w, h = image_sizes[ck]
@@ -2264,6 +2476,8 @@ def _render_calibration_visuals(
         # 2) Reprojicerings-bild
         if best_fr is not None and best_fr["frame_name"] in raw_frames_cache and best_ti in T_rig_frames:
             src_img = raw_frames_cache[best_fr["frame_name"]][ck].copy()
+            if lut256_bgr is not None and src_img.ndim == 3 and src_img.shape[2] == 3:
+                src_img = lut256_bgr[src_img[..., 0], src_img[..., 1], src_img[..., 2]]
         else:
             src_img = np.full((h, w, 3), (18, 20, 25), dtype=np.uint8)
 
@@ -2512,6 +2726,7 @@ def _solve_and_save_profile(
     ruler_100mm: float = 100.0,
     nominal_baseline_mm: float = 300.0,
     progress_cb: Optional[Callable[[str], None]] = None,
+    preview_lut_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     if len(frames) < 4:
         raise RuntimeError(
@@ -2669,6 +2884,7 @@ def _solve_and_save_profile(
         final_frames,
         raw_frames_cache,
         preview_dir,
+        preview_lut_path=preview_lut_path,
     )
     for ck in CAM_ORDER:
         per_cam_data[ck].update(cov_stats[ck])
@@ -2740,6 +2956,43 @@ def calibrate_rig_from_videos(
     eff_sq = float(square_mm) * scale_corr
     eff_mk = float(marker_mm) * scale_corr
 
+    effective_fps = float(fps) if fps and float(fps) > 0 else 50.0
+    try:
+        cap_fps = cv2.VideoCapture(str(videos["cam2_center"]))
+        if cap_fps.isOpened():
+            vid_fps = float(cap_fps.get(cv2.CAP_PROP_FPS) or 0.0)
+            cap_fps.release()
+            if 15.0 <= vid_fps <= 240.0 and (float(fps) <= 0.0 or abs(vid_fps - float(fps)) > 0.5):
+                if progress_cb:
+                    progress_cb(
+                        f"[ChArUco] Detekterade videons verkliga FPS: {vid_fps:.3f} fps "
+                        f"(används i stället för {float(fps):.1f} fps för exakt ljudklapp-synk)."
+                    )
+                effective_fps = vid_fps
+        else:
+            cap_fps.release()
+    except Exception:
+        pass
+
+    default_lut = APP_ROOT / "assets" / "luts" / "DJI_Action4_DLogM_to_Rec709.cube"
+    preview_lut_path: Optional[Path] = None
+    if default_lut.is_file():
+        try:
+            if str(APP_ROOT) not in sys.path:
+                sys.path.insert(0, str(APP_ROOT))
+            from app import probe_video_metadata
+
+            meta_c2 = probe_video_metadata(Path(videos["cam2_center"]))
+            if meta_c2.get("is_dlog"):
+                preview_lut_path = default_lut
+                if progress_cb:
+                    progress_cb(
+                        f"[ChArUco] Detekterade {meta_c2.get('color_mode', 'D-Log M')} — "
+                        "detekterar hörn direkt på råvideo (CLAHE-stöd) och färgsätter rapportbilder med Rec.709-LUT."
+                    )
+        except Exception:
+            preview_lut_path = None
+
     if use_audio_sync:
         if str(SRC_DIR) not in sys.path:
             sys.path.insert(0, str(SRC_DIR))
@@ -2748,7 +3001,7 @@ def calibrate_rig_from_videos(
         temp_sync_dir = output_profile_path.parent / "_temp_charuco_sync"
         temp_sync_dir.mkdir(parents=True, exist_ok=True)
         try:
-            offsets = pr.compute_frame_offsets({k: Path(v) for k, v in videos.items()}, temp_sync_dir, fps=fps)
+            offsets = pr.compute_frame_offsets({k: Path(v) for k, v in videos.items()}, temp_sync_dir, fps=effective_fps)
         finally:
             shutil.rmtree(temp_sync_dir, ignore_errors=True)
     else:
@@ -2759,7 +3012,7 @@ def calibrate_rig_from_videos(
         {k: Path(v) for k, v in videos.items()},
         offsets=offsets,
         detector=detector,
-        fps=fps,
+        fps=effective_fps,
         progress_cb=progress_cb,
     )
 
@@ -2775,6 +3028,7 @@ def calibrate_rig_from_videos(
         ruler_100mm=ruler_100mm,
         nominal_baseline_mm=nominal_baseline_mm,
         progress_cb=progress_cb,
+        preview_lut_path=preview_lut_path,
     )
 
 

@@ -1352,6 +1352,92 @@
             <span id="calProfileTypeBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">Saknas</span>
           </div>
           <div class="section-body">
+            <!-- Automatisk SD-kort & kameraförslag via .id-filer -->
+            <div id="calSdCardBox" style="background:#111419; border:1px solid #2d4263; border-radius:4px; padding:7px 8px; display:flex; flex-direction:column; gap:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+                <span style="font-size:11px; font-weight:700; color:#93c5fd;">Kameror / SD-kort (Auto-förslag via .id-fil)</span>
+                <div style="display:flex; align-items:center; gap:5px;">
+                  <span id="calSdConnBadge" style="font-family:var(--font-mono); font-size:10px; color:var(--text-muted);">0/3 kort</span>
+                  <button class="btn" id="btnCalSdScan" style="padding:2px 7px; font-size:10px;" onclick="scanCalibSdCards(true)">Skanna kameror</button>
+                </div>
+              </div>
+
+              <div id="calSdCamPills" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:4px;"></div>
+
+              <div id="calUnmarkedBox" style="display:none; background:rgba(210,153,34,0.12); border:1px solid var(--status-warn); padding:5px 7px; border-radius:3px;">
+                <div style="font-size:10.5px; color:#f0b72f; margin-bottom:4px;">
+                  Hittade minneskort med DCIM utan .id-fil — märk kortet direkt:
+                </div>
+                <div style="display:flex; gap:4px; flex-wrap:wrap;">
+                  <select id="calUnmarkedDriveSelect" style="width:76px; font-size:10.5px;"></select>
+                  <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="assignCalCardId('CAM0_LEFT.id')">Vänster</button>
+                  <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="assignCalCardId('CAM1_MID.id')">Mitten</button>
+                  <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="assignCalCardId('CAM2_RIGHT.id')">Höger</button>
+                </div>
+              </div>
+
+              <div id="calSdEmptyHint" style="font-size:10.5px; color:var(--text-dim); line-height:1.4;">
+                Anslut kamerorna (USB-C filöverföring) eller sätt i MicroSD-korten med <code>.id</code>-fil och klicka <strong>Skanna kameror</strong> så föreslår programmet kalibreringsfilerna automatiskt.
+              </div>
+
+              <div id="calSdSuggestWrap" style="display:none; flex-direction:column; gap:5px;">
+                <div class="prop-row">
+                  <span class="prop-label" style="min-width:95px;">Föreslaget klipp</span>
+                  <select id="calSdCandidateSelect" onchange="onCalSdCandidateChanged()" style="font-size:10.5px;"></select>
+                </div>
+
+                <div id="calSdMetaBanner" style="font-size:10.5px; color:var(--text-dim); background:var(--bg-input); border:1px solid var(--border); padding:5px 7px; border-radius:3px; line-height:1.4;"></div>
+
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <div style="display:grid; grid-template-columns:82px 1fr auto; gap:4px; align-items:center;">
+                    <span style="font-size:10.5px; color:var(--text-dim);">Cam 1 Vänster</span>
+                    <select id="calSdFile_cam1_left" onchange="updateCalSdImportState()" style="font-size:10px;"></select>
+                    <span id="calSdStatus_cam1_left" style="font-family:var(--font-mono); font-size:9.5px; white-space:nowrap;">-</span>
+                  </div>
+                  <div style="display:grid; grid-template-columns:82px 1fr auto; gap:4px; align-items:center;">
+                    <span style="font-size:10.5px; color:var(--text-dim);">Cam 2 Mitten</span>
+                    <select id="calSdFile_cam2_center" onchange="updateCalSdImportState()" style="font-size:10px;"></select>
+                    <span id="calSdStatus_cam2_center" style="font-family:var(--font-mono); font-size:9.5px; white-space:nowrap;">-</span>
+                  </div>
+                  <div style="display:grid; grid-template-columns:82px 1fr auto; gap:4px; align-items:center;">
+                    <span style="font-size:10.5px; color:var(--text-dim);">Cam 3 Höger</span>
+                    <select id="calSdFile_cam3_right" onchange="updateCalSdImportState()" style="font-size:10px;"></select>
+                    <span id="calSdStatus_cam3_right" style="font-family:var(--font-mono); font-size:9.5px; white-space:nowrap;">-</span>
+                  </div>
+                </div>
+
+                <div class="prop-row">
+                  <span class="prop-label" style="min-width:95px;">Kalibreringsmapp</span>
+                  <input type="text" id="calSdProjNameInput" placeholder="Calib_Rig_..." oninput="appState.calibSdUserEditedName = true; updateCalSdImportState();" style="font-size:10.5px;" />
+                </div>
+
+                <div id="calSdTargetSummary" style="font-family:var(--font-mono); font-size:10px; color:var(--text-dim);"></div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+                  <button class="btn btn-primary" id="btnCalSdImport" style="padding:6px 7px; font-size:10.5px;" onclick="importCalibFromSd(false)">
+                    Importera föreslagna filer
+                  </button>
+                  <button class="btn btn-success" id="btnCalSdImportAndRun" style="padding:6px 7px; font-size:10.5px;" onclick="importCalibFromSd(true)">
+                    Importera &amp; Kalibrera direkt
+                  </button>
+                </div>
+              </div>
+
+              <div id="calCopyProgressBox" style="display:none; background:var(--bg-input); border:1px solid var(--border-light); padding:6px 7px; flex-direction:column; gap:5px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-family:var(--font-mono); font-size:10px;">
+                  <span id="calCopyHeaderTitle" style="font-weight:600; color:var(--status-active);">KOPIERAR...</span>
+                  <span id="calCopySpeedEtaTxt" style="color:var(--text-dim);">-</span>
+                </div>
+                <div style="width:100%; height:6px; background:#1a1c20; border:1px solid var(--border); overflow:hidden;">
+                  <div id="calCopyTotalBarFill" style="height:100%; width:0%; background:var(--status-active); transition:width 0.12s;"></div>
+                </div>
+                <div id="calCopyFilesList" style="display:flex; flex-direction:column; gap:3px;"></div>
+                <button class="btn btn-danger" id="btnCalCancelCopy" style="padding:4px 8px; font-size:10px; display:none;" onclick="stopProcess()">
+                  Avbryt kopiering
+                </button>
+              </div>
+            </div>
+
             <div class="prop-row">
               <span class="prop-label">Välj tagning på disk</span>
               <select id="calTakeSelect" onchange="onCalTakeSelected(this.value)">
@@ -1722,6 +1808,9 @@
       calibPreviewMode: "guide",
       userPickedCalibMode: false,
       charucoStatus: null,
+      calibSdData: null,
+      calibSdUserEditedName: false,
+      calibSdSelectedCandidateId: null,
       userChangedRigMode: false,
       frames: [],
       currentFrameIdx: 0,
@@ -1730,6 +1819,15 @@
       defaultLutPath: "",
       lastAutoLutKey: null
     };
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
 
     async function callBackend(action, payload = {}) {
       if (window.pywebview && window.pywebview.api && typeof window.pywebview.api[action] === "function") {
@@ -1754,6 +1852,7 @@
         validatePaths();
       } else if (tab === "calib") {
         refreshCharucoStatus();
+        scanCalibSdCards(false);
       }
     }
 
@@ -1924,6 +2023,7 @@
         await validatePaths();
       }
       await refreshCharucoStatus();
+      await scanCalibSdCards(false);
     }
 
     async function assignCardId(idFile) {
@@ -2317,10 +2417,59 @@
 
     function renderCopyProgress(cs) {
       const panel = document.getElementById("copyProgressPanel");
+      const calBox = document.getElementById("calCopyProgressBox");
       if (!cs) {
         panel.style.display = "none";
+        if (calBox) calBox.style.display = "none";
         return;
       }
+
+      if (cs.context === "calib") {
+        panel.style.display = "none";
+        if (calBox) {
+          calBox.style.display = "flex";
+          const cTitle = document.getElementById("calCopyHeaderTitle");
+          const cSpeed = document.getElementById("calCopySpeedEtaTxt");
+          const cBar = document.getElementById("calCopyTotalBarFill");
+          const cList = document.getElementById("calCopyFilesList");
+          const cCancel = document.getElementById("btnCalCancelCopy");
+          if (cs.error) {
+            cTitle.textContent = `FEL: ${cs.error}`;
+            cTitle.style.color = "var(--status-err)";
+            cSpeed.textContent = "-";
+            cBar.style.background = "var(--status-err)";
+            cCancel.style.display = "none";
+          } else if (cs.done) {
+            cTitle.textContent = appState.isRunning
+              ? `KOPIERING KLAR (${cs.total_files}/${cs.total_files}) — KALIBRERAR...`
+              : `KLAR – ${cs.total_files} filer i '${cs.project_name}'`;
+            cTitle.style.color = "var(--status-ok)";
+            cSpeed.textContent = "100% Verifierad";
+            cBar.style.background = "var(--status-ok)";
+            cCancel.style.display = "none";
+          } else {
+            cTitle.textContent = `KOPIERAR FIL ${cs.current_file_idx}/${cs.total_files} (${cs.overall_pct || 0}%)`;
+            cTitle.style.color = "var(--status-active)";
+            cSpeed.textContent = `${cs.speed_mbps || 0} MB/s • ~${cs.eta_sec || 0} s kvar`;
+            cBar.style.background = "var(--status-active)";
+            cCancel.style.display = "inline-flex";
+          }
+          cBar.style.width = `${cs.overall_pct || 0}%`;
+          cList.innerHTML = (cs.files || []).map(f => {
+            const isDone = f.state === "done";
+            const isCopying = f.state === "copying";
+            const col = isDone ? "var(--status-ok)" : (isCopying ? "#ffffff" : "var(--text-muted)");
+            const tag = isDone ? "KLAR" : (isCopying ? `${f.pct}%` : "Väntar");
+            return `<div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:9.5px; color:${col};">
+              <span>${escapeHtml(f.dst_name)} (${escapeHtml(f.src_name)})</span>
+              <span>${f.copied_mb.toFixed(0)}/${f.size_mb.toFixed(0)} MB (${tag})</span>
+            </div>`;
+          }).join("");
+        }
+        return;
+      }
+
+      if (calBox) calBox.style.display = "none";
       panel.style.display = "flex";
 
       const titleEl = document.getElementById("copyHeaderTitle");
@@ -3186,10 +3335,13 @@
           document.getElementById("btnRunSync").disabled = st.is_running;
           const calStopBtn = document.getElementById("btnCalStopProc");
           if (calStopBtn) calStopBtn.style.display = st.is_running ? "inline-flex" : "none";
-          ["btnCalRunSolve", "btnCalRunDemo", "btnCalRunVerify"].forEach(id => {
+          ["btnCalRunSolve", "btnCalRunDemo", "btnCalRunVerify", "btnCalSdImport", "btnCalSdImportAndRun"].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.disabled = st.is_running;
           });
+          if (!st.is_running && appState.calibSdData) {
+            updateCalSdImportState();
+          }
 
           document.getElementById("statusHeadline").textContent = st.status_title || "REDO";
           document.getElementById("statusDetail").textContent = st.status_detail || "";
@@ -3241,11 +3393,283 @@
       } catch (e) {}
     }
 
-    function onCalTakeSelected(rawDir) {
+    async function onCalTakeSelected(rawDir) {
       const inp = document.getElementById("calRawDirInput");
       if (inp && rawDir) {
         inp.value = rawDir;
         inp.dataset.autoSynced = "0";
+        const sep = rawDir.includes("/") ? "/" : "\\";
+        try {
+          const ins = await callBackend("inspect_take", {
+            paths: {
+              cam1_left: `${rawDir}${sep}cam1_left.mp4`,
+              cam2_center: `${rawDir}${sep}cam2_center.mp4`,
+              cam3_right: `${rawDir}${sep}cam3_right.mp4`
+            }
+          });
+          const fps = ins?.meta?.cam2_center?.fps || ins?.meta?.cam1_left?.fps || ins?.meta?.cam3_right?.fps;
+          const fpsInp = document.getElementById("calFpsInput");
+          if (fpsInp && fps && fps > 0) {
+            fpsInp.value = fps;
+          }
+        } catch (e) {}
+      }
+    }
+
+    async function scanCalibSdCards(userInitiated = false) {
+      const badge = document.getElementById("calSdConnBadge");
+      if (userInitiated && badge) {
+        badge.textContent = "Skannar...";
+        badge.style.color = "var(--status-active)";
+      }
+      try {
+        const res = await callBackend("scan_calibration_sd_candidates", {});
+        if (res && res.ok) {
+          appState.calibSdData = res;
+          renderCalibSdBox(res);
+        }
+      } catch (e) {
+        if (badge) {
+          badge.textContent = "Skanningsfel";
+          badge.style.color = "var(--status-err)";
+        }
+      }
+    }
+
+    function renderCalibSdBox(data) {
+      const camMeta = [
+        { key: "cam1_left", shortLabel: "Cam 1 V", id: "CAM0_LEFT.id" },
+        { key: "cam2_center", shortLabel: "Cam 2 M", id: "CAM1_MID.id" },
+        { key: "cam3_right", shortLabel: "Cam 3 H", id: "CAM2_RIGHT.id" }
+      ];
+      const conn = Number(data.connected_count || 0);
+      const badge = document.getElementById("calSdConnBadge");
+      if (badge) {
+        badge.textContent = `${conn}/3 kort`;
+        badge.style.color = conn === 3 ? "var(--status-ok)" : (conn > 0 ? "var(--status-warn)" : "var(--text-muted)");
+      }
+
+      const pillsEl = document.getElementById("calSdCamPills");
+      if (pillsEl) {
+        pillsEl.innerHTML = camMeta.map(cm => {
+          const ci = (data.cameras && data.cameras[cm.key]) || {};
+          const isConn = !!ci.connected;
+          const borderCol = isConn ? "rgba(63,185,80,0.45)" : "var(--border)";
+          const txtCol = isConn ? "var(--status-ok)" : "var(--text-muted)";
+          const sub = isConn
+            ? `${escapeHtml(ci.drive || "")} (${ci.clip_count || 0} mp4)`
+            : "Ej ansluten";
+          return `<div style="background:var(--bg-input); border:1px solid ${borderCol}; border-radius:3px; padding:3px 5px; font-size:9.5px; line-height:1.3;">
+            <div style="font-weight:700; color:${txtCol};">${cm.shortLabel}</div>
+            <div style="font-family:var(--font-mono); color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(cm.id)}: ${sub}">${sub}</div>
+          </div>`;
+        }).join("");
+      }
+
+      const unmarked = data.unmarked_dcim || [];
+      const unmarkedBox = document.getElementById("calUnmarkedBox");
+      const unmarkedSel = document.getElementById("calUnmarkedDriveSelect");
+      if (unmarkedBox && unmarkedSel) {
+        if (unmarked.length > 0) {
+          unmarkedBox.style.display = "block";
+          unmarkedSel.innerHTML = unmarked.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
+        } else {
+          unmarkedBox.style.display = "none";
+        }
+      }
+
+      const emptyHint = document.getElementById("calSdEmptyHint");
+      const suggestWrap = document.getElementById("calSdSuggestWrap");
+      const candidates = data.candidates || [];
+
+      if (candidates.length === 0) {
+        if (emptyHint) {
+          const part = data.partial_calib_session;
+          const partTxt = part
+            ? `<br/><span style="color:var(--status-warn);">Pågående mapp <strong>${escapeHtml(part.name)}</strong> har ${part.mp4_count}/3 filer klara — koppla in nästa kamera så kan du fylla på resten.</span>`
+            : "";
+          emptyHint.innerHTML = `Anslut kamerorna (USB-C filöverföring) eller sätt i MicroSD-korten med <code>.id</code>-fil och klicka <strong>Skanna kameror</strong> så föreslår programmet kalibreringsfilerna automatiskt.${partTxt}`;
+          emptyHint.style.display = "block";
+        }
+        if (suggestWrap) suggestWrap.style.display = "none";
+        return;
+      }
+
+      if (emptyHint) emptyHint.style.display = "none";
+      if (suggestWrap) suggestWrap.style.display = "flex";
+
+      const candSel = document.getElementById("calSdCandidateSelect");
+      if (candSel) {
+        candSel.innerHTML = candidates.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join("");
+        const kept = candidates.find(c => c.id === appState.calibSdSelectedCandidateId);
+        const picked = kept || candidates.find(c => c.id === data.recommended_id) || candidates[0];
+        candSel.value = picked.id;
+        appState.calibSdSelectedCandidateId = picked.id;
+      }
+
+      // Fyll per-kamera-listor med samtliga klipp på respektive anslutet SD-kort
+      camMeta.forEach(cm => {
+        const sel = document.getElementById(`calSdFile_${cm.key}`);
+        if (!sel) return;
+        const clips = (data.cameras && data.cameras[cm.key] && data.cameras[cm.key].clips) || [];
+        const opts = ['<option value="">-- Hoppa över / ej ansluten --</option>'].concat(
+          clips.map(cl => {
+            const label = `${cl.name} (${cl.size_mb} MB • ${(cl.mtime_str || "").slice(11, 19)})`;
+            return `<option value="${escapeHtml(cl.path)}">${escapeHtml(label)}</option>`;
+          })
+        );
+        sel.innerHTML = opts.join("");
+      });
+
+      const nameInp = document.getElementById("calSdProjNameInput");
+      if (nameInp && !appState.calibSdUserEditedName) {
+        nameInp.value = data.suggested_project_name || candidates[0].suggested_project_name || "Calib_Rig";
+      }
+
+      applyCalSdCandidateSelection();
+    }
+
+    function applyCalSdCandidateSelection() {
+      const data = appState.calibSdData;
+      if (!data || !data.candidates) return;
+      const candSel = document.getElementById("calSdCandidateSelect");
+      const cid = candSel ? candSel.value : data.recommended_id;
+      const cand = data.candidates.find(c => c.id === cid) || data.candidates[0];
+      if (!cand) return;
+      appState.calibSdSelectedCandidateId = cand.id;
+
+      ["cam1_left", "cam2_center", "cam3_right"].forEach(ck => {
+        const sel = document.getElementById(`calSdFile_${ck}`);
+        if (!sel) return;
+        const p = (cand.paths && cand.paths[ck]) || "";
+        sel.value = p;
+      });
+
+      const fpsInp = document.getElementById("calFpsInput");
+      if (fpsInp && cand.fps && cand.fps > 0) {
+        fpsInp.value = cand.fps;
+      }
+
+      renderCalibSdCandidateMeta(cand);
+      updateCalSdImportState();
+    }
+
+    function onCalSdCandidateChanged() {
+      const data = appState.calibSdData;
+      const candSel = document.getElementById("calSdCandidateSelect");
+      if (data && candSel && !appState.calibSdUserEditedName && !data.partial_calib_session) {
+        const cand = (data.candidates || []).find(c => c.id === candSel.value);
+        if (cand && cand.suggested_project_name) {
+          document.getElementById("calSdProjNameInput").value = cand.suggested_project_name;
+        }
+      }
+      applyCalSdCandidateSelection();
+    }
+
+    function renderCalibSdCandidateMeta(cand) {
+      const banner = document.getElementById("calSdMetaBanner");
+      if (!banner) return;
+      const parts = [];
+      parts.push(`<strong>${escapeHtml(cand.reason || "")}</strong> • ${cand.total_mb || 0} MB`);
+      if (cand.is_dlog) {
+        parts.push(`<span style="color:var(--status-ok);">D-Log M (10-bit): används direkt utan omkodning (CLAHE-detektion + Rec.709-förhandsvisning)</span>`);
+      }
+      if (Array.isArray(cand.warnings) && cand.warnings.length > 0) {
+        cand.warnings.forEach(w => {
+          const isErr = w.includes("VARNING");
+          const col = isErr ? "var(--status-err)" : "var(--status-warn)";
+          parts.push(`<span style="color:${col};">${escapeHtml(w)}</span>`);
+        });
+      }
+      banner.innerHTML = parts.join("<br/>");
+    }
+
+    function updateCalSdImportState() {
+      const data = appState.calibSdData || {};
+      const rawName = (document.getElementById("calSdProjNameInput")?.value || "").trim();
+      const safeName = rawName.replace(/[<>:"/\\|?*]+/g, "_").replace(/^[ ._]+|[ ._]+$/g, "") || "Calib_Rig";
+      const existingSess = (data.existing_sessions_map && data.existing_sessions_map[safeName]) || null;
+
+      let selectedCount = 0;
+      let willHaveCount = 0;
+      ["cam1_left", "cam2_center", "cam3_right"].forEach(ck => {
+        const sel = document.getElementById(`calSdFile_${ck}`);
+        const stEl = document.getElementById(`calSdStatus_${ck}`);
+        const picked = !!(sel && sel.value);
+        const onDisk = !!(existingSess && existingSess.present && existingSess.present[ck]);
+        const conn = !!(data.cameras && data.cameras[ck] && data.cameras[ck].connected);
+        if (picked) selectedCount++;
+        if (picked || onDisk) willHaveCount++;
+        if (stEl) {
+          if (picked && onDisk) {
+            stEl.textContent = "Ersätter ✓";
+            stEl.style.color = "var(--status-active)";
+          } else if (picked) {
+            stEl.textContent = "Vald ✓";
+            stEl.style.color = "var(--status-ok)";
+          } else if (onDisk) {
+            stEl.textContent = "Redan i mapp ✓";
+            stEl.style.color = "var(--status-ok)";
+          } else if (!conn) {
+            stEl.textContent = "Ej ansluten";
+            stEl.style.color = "var(--text-muted)";
+          } else {
+            stEl.textContent = "Hoppas över";
+            stEl.style.color = "var(--text-muted)";
+          }
+        }
+      });
+
+      const sumEl = document.getElementById("calSdTargetSummary");
+      if (sumEl) {
+        const sep = appState.capturesRoot.includes("/") ? "/" : "\\";
+        const readyCol = willHaveCount === 3 ? "var(--status-ok)" : "var(--status-warn)";
+        sumEl.innerHTML = `Mål: ${escapeHtml(appState.capturesRoot)}${sep}${escapeHtml(safeName)}${sep}raw &bull; <span style="color:${readyCol}; font-weight:700;">${willHaveCount}/3 kameror klara efter import</span>`;
+      }
+
+      const btnImp = document.getElementById("btnCalSdImport");
+      const btnRun = document.getElementById("btnCalSdImportAndRun");
+      if (btnImp) btnImp.disabled = appState.isRunning || selectedCount === 0;
+      if (btnRun) btnRun.disabled = appState.isRunning || willHaveCount < 3;
+    }
+
+    async function assignCalCardId(idFile) {
+      const drive = document.getElementById("calUnmarkedDriveSelect")?.value;
+      if (!drive) return;
+      await callBackend("write_sd_id_file", { drive, id_file: idFile });
+      await refreshAll();
+    }
+
+    async function importCalibFromSd(autoCalibrate) {
+      const paths = {
+        cam1_left: document.getElementById("calSdFile_cam1_left")?.value || "",
+        cam2_center: document.getElementById("calSdFile_cam2_center")?.value || "",
+        cam3_right: document.getElementById("calSdFile_cam3_right")?.value || ""
+      };
+      const projectName = (document.getElementById("calSdProjNameInput")?.value || "").trim();
+      const rulerMm = parseFloat(document.getElementById("calRulerInput")?.value || "100.0") || 100.0;
+      const fpsVal = parseFloat(document.getElementById("calFpsInput")?.value || "0") || 0.0;
+
+      const res = await callBackend("import_calibration_from_sd", {
+        project_name: projectName,
+        paths,
+        auto_calibrate: !!autoCalibrate,
+        ruler_100mm: rulerMm,
+        fps: fpsVal
+      });
+      if (res && res.ok) {
+        appState.calibSdUserEditedName = false;
+        const rawInp = document.getElementById("calRawDirInput");
+        if (rawInp && res.raw_dir) {
+          rawInp.value = res.raw_dir;
+          rawInp.dataset.autoSynced = "0";
+        }
+        const fpsInp = document.getElementById("calFpsInput");
+        if (fpsInp && res.detected_fps && res.detected_fps > 0) {
+          fpsInp.value = res.detected_fps;
+        }
+      } else if (res && res.error) {
+        alert(res.error);
       }
     }
 
