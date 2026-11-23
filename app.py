@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-OptiGSRigg Studio v2.0 – Cross-Platform Desktop App (Windows & macOS)
-=====================================================================
+OptiGSRigg Studio – Cross-Platform Desktop App (Windows & macOS)
+=================================================================
 Arbetsstation för 3x DJI Osmo Action 4 -> 3DGUT Pipeline.
 Innehåller nu dedikerad Steg 1-modul för:
   - Full kamerakontroll (CAM0_LEFT.id, CAM1_MID.id, CAM2_RIGHT.id + diskutrymme)
@@ -34,6 +34,21 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
 APP_ROOT = Path(__file__).resolve().parent
+VERSION_FILE_PATH = APP_ROOT / "VERSION"
+
+
+def _load_app_version() -> str:
+    """Läser aktuell applikationsversion från rotmappens VERSION-fil."""
+    try:
+        v = VERSION_FILE_PATH.read_text(encoding="utf-8").strip()
+        if v:
+            return v
+    except OSError:
+        pass
+    return "2.1.0"
+
+
+APP_VERSION = _load_app_version()
 SRC_DIR = APP_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
@@ -1360,7 +1375,7 @@ class RigStudioBackend:
         self._settings: dict = load_app_settings()
         self._win_desktop: str = _get_windows_desktop_name()
         self._logs: list[str] = [
-            f"[System] OptiGSRigg Studio v2.0 startad på {platform.system()} ({platform.release()})",
+            f"[System] OptiGSRigg Studio v{APP_VERSION} startad på {platform.system()} ({platform.release()})",
             f"[System] Python: {sys.version.split()[0]} • Arbetsyta: {APP_ROOT}",
         ]
         if platform.system() == "Windows" and self._win_desktop.lower() != "default":
@@ -1586,6 +1601,7 @@ class RigStudioBackend:
 
         os_name = "macOS" if platform.system() == "Darwin" else ("Windows" if platform.system() == "Windows" else "Linux")
         return {
+            "app_version": APP_VERSION,
             "os_label": f"{os_name} ({platform.release()})",
             "captures_root": str(self.captures_root),
             "settings": _validate_settings_status(self._settings),
@@ -2973,7 +2989,7 @@ class RigStudioBackend:
             {
                 "protocolVersion": "2024-11-05",
                 "capabilities": {},
-                "clientInfo": {"name": "OptiGSRigg", "version": "2.0"},
+                "clientInfo": {"name": "OptiGSRigg", "version": APP_VERSION},
             },
             timeout=timeout,
         )
@@ -4286,7 +4302,7 @@ def main():
         except Exception:
             pass
 
-    parser = argparse.ArgumentParser(description="OptiGSRigg Studio v2.0 (Windows & macOS)")
+    parser = argparse.ArgumentParser(description=f"OptiGSRigg Studio v{APP_VERSION} (Windows & macOS)")
     parser.add_argument("--classic", action="store_true", help="Starta det äldre Tkinter-gränssnittet")
     parser.add_argument("--headless", action="store_true", help="Starta endast den lokala UI-servern utan att öppna fönster")
     parser.add_argument("--port", type=int, default=0, help="Fast port (0 = återanvänd eller välj automatiskt)")
@@ -4322,7 +4338,7 @@ def main():
     url = f"http://127.0.0.1:{port}"
 
     print("============================================================")
-    print("  OptiGSRigg Studio v2.0 (HTML/CSS/JS + Python Desktop)")
+    print(f"  OptiGSRigg Studio v{APP_VERSION} (HTML/CSS/JS + Python Desktop)")
     print(f"  Plattform : {platform.system()} ({platform.release()})")
     print(f"  Lokalt UI : {url}", "(Återanvände öppet fönster)" if had_existing_window else "")
     print("============================================================", flush=True)
@@ -4367,4 +4383,3 @@ if __name__ == "__main__":
         except OSError:
             pass
         raise
-w

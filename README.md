@@ -1,4 +1,6 @@
-# OptiGSRigg Studio v2.0
+# OptiGSRigg Studio (`v2.1.0`)
+
+> **Aktuell version:** [`v2.1.0`](VERSION) — se [`CHANGELOG.md`](CHANGELOG.md) för fullständig ändringshistorik mellan versioner.
 
 Fristående desktop-applikation för **Windows & macOS** som hanterar hela 3D Gaussian Splatting-pipelinen (**3DGUT** med native `OPENCV_FISHEYE`, utan destruktiv undistortion) från **3× DJI Osmo Action 4** i 90° porträttläge till färdig 3D-modell i **Spirula Studio** och **LichtFeld Studio**.
 
@@ -71,7 +73,7 @@ Projektet är konfigurerat med [`.gitignore`](.gitignore) så att bara källkod,
 | Synkas via GitHub (gemensamt) | Förblir lokalt per dator (i `.gitignore`) |
 | :--- | :--- |
 | Programkod (`app.py`, `src/`, `ui/`, `calibration/`) | `.venv/` och `__pycache__/` (byggs per dator) |
-| Skript & guider (`setup_ny_dator.bat`, `README.md`, `KALIBRERINGSGUIDE_SV.md`) | `config/settings.json` (datorspecifika sökvägar till Spirula/LichtFeld/inspelningsmapp) |
+| Skript, version & guider (`setup_ny_dator.bat`, `VERSION`, `README.md`, `CHANGELOG.md`, `KALIBRERINGSGUIDE_SV.md`) | `config/settings.json` (datorspecifika sökvägar till Spirula/LichtFeld/inspelningsmapp) |
 | Färg-LUT ([`assets/luts/DJI_Action4_DLogM_to_Rec709.cube`](assets/luts/DJI_Action4_DLogM_to_Rec709.cube)) & ikoner | `config/app_window_profile/` (Edges lokala webbläsarprofil & cache) |
 | Delad riggkalibrering (`config/calibrated_rig.json` m.fl.) | `*.lnk`-genvägar, `config/last_*.log`, `config/.running_instance.json` |
 
@@ -170,6 +172,8 @@ Hela pipelinen kan även köras från terminalen utan GUI:
 | [`KALIBRERINGSGUIDE_SV.md`](KALIBRERINGSGUIDE_SV.md) | Detaljerad svensk manual för ChArUco-kalibrering |
 | [`PIPELINE_STEG_FOR_STEG.md`](PIPELINE_STEG_FOR_STEG.md) | Teknisk specifikation över pipelinen |
 | [`assets/luts/DJI_Action4_DLogM_to_Rec709.cube`](assets/luts/DJI_Action4_DLogM_to_Rec709.cube) | Färg-LUT för DJI Osmo Action 4 D-Log M |
+| [`VERSION`](VERSION) | Enkel sanningskälla för aktuell programversion (`2.1.0`), läses av `app.py` & UI |
+| [`CHANGELOG.md`](CHANGELOG.md) | Kronologisk ändringslogg per version (*Keep a Changelog*) |
 | [`.gitignore`](.gitignore) | Hindrar `.venv`, Edge-cache, loggar, `.lnk` och lokal `settings.json` från att committas |
 
 ---
@@ -187,3 +191,35 @@ Hela pipelinen kan även köras från terminalen utan GUI:
   ```powershell
   .\.venv\Scripts\python.exe app.py --classic
   ```
+
+---
+
+## 7. Versionshantering & Release-flöde
+
+Projektet använder **Semantisk versionering** (`MAJOR.MINOR.PATCH`) med [`VERSION`](VERSION) som enda sanningskälla och [`CHANGELOG.md`](CHANGELOG.md) för detaljerade ändringar.
+
+### Släppta versioner (översikt)
+
+| Version | Datum | Huvudpunkter | Detaljer |
+| :--- | :--- | :--- | :--- |
+| **v2.1.0** | 2026-11-23 | SD-kortets `.id`-detektering i Steg 0B, 10-bit `D-Log M` i ChArUco, fixad fisheye/BA-lösare (`~1.06 px`), auto-FPS för ljudsynk, `VERSION` & `CHANGELOG.md` | [`CHANGELOG.md`](CHANGELOG.md#210---2026-11-23) |
+| **v2.0.0** | 2026-11-22 | Fristående desktop-app (Windows & macOS), ChArUco 3-tavelskalibrering, Steg 1 EXIF/preview, D-Log M LUT, Spirula Vulkan & LichtFeld MCP | [`CHANGELOG.md`](CHANGELOG.md#200---2026-11-22) |
+| **v1.0.0** | 2026-11-08 | Första OptiGSRigg-pipelinen (`process_3dgs_rig.py`), initialt webb-UI, FFT klappsynk & Laplacian skärpefilter | [`CHANGELOG.md`](CHANGELOG.md#100---2026-11-08) |
+
+### Så skapar du en ny version
+
+1. **Uppdatera [`VERSION`](VERSION)** med nytt versionsnummer enligt `MAJOR.MINOR.PATCH` (t.ex. `2.1.1` för buggfix, `2.2.0` för ny funktion eller `3.0.0` för brytande förändring). [`app.py`](app.py) och toppanelen i [`ui/index.html`](ui/index.html) visar automatiskt nya numret vid nästa start.
+2. **Uppdatera [`CHANGELOG.md`](CHANGELOG.md) & denna `README.md`:** Flytta punkter från `[Osläppt]` till en ny daterad rubrik `[X.Y.Z] - ÅÅÅÅ-MM-DD` och uppdatera rubriken samt tabellen ovan.
+3. **Spara & tagga versionen i Git:**
+   ```powershell
+   git add VERSION CHANGELOG.md README.md
+   git commit -m "Release v2.1.0"
+   git tag -a v2.1.0 -m "OptiGSRigg Studio v2.1.0"
+   git push origin main --tags
+   ```
+4. **Hoppa mellan versioner vid behov:**
+   ```powershell
+   git tag -l                  # Lista alla sparade versioner
+   git checkout v2.0.0         # Öppna en tidigare version för test/jämförelse
+   git switch -                # Gå tillbaka till senaste arbetsgrenen
+   ```
